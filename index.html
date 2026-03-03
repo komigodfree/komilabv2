@@ -153,67 +153,6 @@
   </div>
 </section>
 
-<!-- ARCHITECTURE TEASER -->
-<section class="section">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
-      <div class="animate-in">
-        <div class="section-eyebrow">// KOMI.LAB Reference Architecture</div>
-        <h2 style="font-size:1.75rem;margin-bottom:1rem;">Un HomeLab conçu comme une infrastructure d'entreprise</h2>
-        <p style="color:var(--text-secondary);font-size:.88rem;line-height:1.8;margin-bottom:1.5rem;">
-          Proxmox Cluster · PA-VM Firewall · VXLAN inter-nœuds · Zones USERS / SERVERS / SOC / MGT / DMZ. Chaque décision d'architecture est documentée, justifiée et reproductible.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem;">
-          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Environnement multi-zones segmenté</div>
-          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Haute disponibilité et failover documentés</div>
-          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Stack monitoring : Prometheus + Grafana + Loki</div>
-          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Active Directory durci — HardenAD + Tiering</div>
-        </div>
-        <a href="architecture.html" class="btn btn-outline">Voir l'architecture complète →</a>
-      </div>
-      <div class="animate-in" style="transition-delay:.15s">
-        <div class="code-block-wrapper">
-          <div class="code-block-header">
-            <span class="code-block-lang">KOMI.LAB — Network Topology</span>
-            <button class="copy-btn">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
-              Copy
-            </button>
-          </div>
-          <pre><code>┌─────────────────────────────────────────┐
-│            INTERNET / WAN               │
-└──────────────────┬──────────────────────┘
-                   │
-         ┌─────────▼─────────┐
-         │   PA-VM FIREWALL  │  ◄── Zone Control
-         │   (Palo Alto VM)  │
-         └──┬────┬────┬──┬───┘
-            │    │    │  │
-         ┌──▼┐ ┌─▼┐ ┌─▼┐ ┌─▼────┐
-         │USR│ │SRV│ │SOC│ │ DMZ  │
-         │/24│ │/24│ │/24│ │WireG.│
-         └───┘ └───┘ └───┘ └──────┘
-            │
-   ┌────────▼────────────────────┐
-   │   PROXMOX CLUSTER (3 nodes) │
-   │  ┌──────┐┌──────┐┌───────┐ │
-   │  │NODE 1││NODE 2││NODE 3 │ │
-   │  │ PVE  ││ PVE  ││ PVE   │ │
-   │  └──┬───┘└──┬───┘└───┬───┘ │
-   │     └────────┴─────────┘    │
-   │         VXLAN Overlay        │
-   └────────────┬────────────────┘
-                │
-        ┌───────▼───────┐
-        │ TrueNAS SCALE │ ◄── iSCSI / NFS
-        │  (Shared Stor)│
-        └───────────────┘</code></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CTA BANNER -->
 <section style="background:linear-gradient(135deg,rgba(0,212,255,0.06) 0%,rgba(37,99,235,0.08) 100%);border-top:1px solid var(--bg-border);border-bottom:1px solid var(--bg-border);padding:4rem 0;">
   <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
