@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KomiLab Labs — Catalogue complet des labs techniques : Infrastructure, Réseau, Cybersécurité, Gouvernance, Automatisation.">
+  <title>KomiLab — Labs Techniques</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    .labs-hero {
+      padding: 7rem 0 3rem;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--bg-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .labs-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .labs-hero-inner { position: relative; z-index: 1; }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--bg-border);
+    }
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all var(--transition);
+      letter-spacing: 0.05em;
+    }
+    .filter-btn:hover { color: var(--cyan); border-color: rgba(0,212,255,0.3); }
+    .filter-btn.active {
+      color: var(--bg-deep);
+      background: var(--cyan);
+      border-color: var(--cyan);
+    }
+    .filter-sep {
+      width: 1px; height: 20px;
+      background: var(--bg-border);
+      margin: 0 0.25rem;
+    }
+
+    /* LEVEL FILTER */
+    .level-filter {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+    }
+    .level-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 100px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all var(--transition);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* SEARCH */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .search-input {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: rgba(0,212,255,0.4); }
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .stats-bar-count {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .stats-bar-count span { color: var(--cyan); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      grid-column: 1/-1;
+      padding: 4rem 2rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* LAB CARD FULL */
+    .lab-card-date {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">KL</div>
+      <span class="logo-text">Komi<span>Lab</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="labs.html"         class="nav-link active">Labs</a>
+      <a href="governance.html"   class="nav-link">Gouvernance</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="veille.html"       class="nav-link">Veille</a>
+      <a href="about.html"        class="nav-link">À propos</a>
+    </div>
+    <a href="#" class="nav-cta">Explorer les labs →</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<!-- HERO -->
+<section class="labs-hero">
+  <div class="container labs-hero-inner">
+    <div class="section-eyebrow">// Catalogue complet</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:0.75rem;">
+      Labs <span style="color:var(--cyan)">Techniques</span>
+    </h1>
+    <p style="color:var(--text-secondary);font-size:.9rem;max-width:560px;line-height:1.7;">
+      Modes opératoires documentés depuis des environnements réels. Chaque lab inclut topologie, commandes reproductibles et retour d'expérience production.
+    </p>
+    <!-- Mini stats -->
+    <div style="display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap;">
+      <div style="font-family:var(--font-mono);">
+        <span id="total-count" style="font-size:1.5rem;font-weight:700;color:var(--cyan);">—</span>
+        <span style="font-size:.72rem;color:var(--text-muted);display:block;">Labs publiés</span>
+      </div>
+      <div style="font-family:var(--font-mono);">
+        <span id="cat-count" style="font-size:1.5rem;font-weight:700;color:var(--cyan);">6</span>
+        <span style="font-size:.72rem;color:var(--text-muted);display:block;">Catégories</span>
+      </div>
+      <div style="font-family:var(--font-mono);">
+        <span style="font-size:1.5rem;font-weight:700;color:var(--cyan);">4</span>
+        <span style="font-size:.72rem;color:var(--text-muted);display:block;">Niveaux</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOGUE -->
+<section class="section">
+  <div class="container">
+
+    <!-- SEARCH -->
+    <div class="search-wrapper">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" class="search-input" id="search-input" placeholder="Rechercher un lab, tag, technologie…" autocomplete="off">
+    </div>
+
+    <!-- CATEGORY FILTERS -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all">Tous</button>
+      <div class="filter-sep"></div>
+      <button class="filter-btn" data-filter="infrastructure">⬡ Infrastructure</button>
+      <button class="filter-btn" data-filter="reseau-securite">◈ Réseau & Sécurité</button>
+      <button class="filter-btn" data-filter="cybersecurite">◉ Cybersécurité</button>
+      <button class="filter-btn" data-filter="automatisation">◎ Automatisation</button>
+      <button class="filter-btn" data-filter="gouvernance">◇ Gouvernance IT</button>
+      <button class="filter-btn" data-filter="linux">○ Linux</button>
+      <div class="filter-sep"></div>
+      <!-- Level filters -->
+      <button class="level-btn" data-level="Lab"        style="color:var(--green-ok);border-color:rgba(0,255,148,0.25);">Lab</button>
+      <button class="level-btn" data-level="Pilote"     style="color:var(--yellow-note);border-color:rgba(255,209,102,0.25);">Pilote</button>
+      <button class="level-btn" data-level="Production" style="color:var(--cyan);border-color:rgba(0,212,255,0.25);">Production</button>
+      <button class="level-btn" data-level="Expert"     style="color:var(--orange-warn);border-color:rgba(255,140,66,0.25);">Expert</button>
+    </div>
+
+    <!-- RESULTS COUNT -->
+    <div class="stats-bar">
+      <div class="stats-bar-count"><span id="result-count">—</span> lab(s) affiché(s)</div>
+      <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);">
+        Mis à jour · Mars 2025
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="labs-grid" id="labs-grid">
+      <div style="grid-column:1/-1;padding:3rem;text-align:center;">
+        <div class="news-loading-bar" style="max-width:240px;margin:0 auto;"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Komi<span>Lab</span></div>
+        <p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source.</p>
+        <div class="footer-socials">
+          <a href="https://github.com/komilab" target="_blank" rel="noopener" class="footer-social">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Catégories</div>
+        <div class="footer-links">
+          <a href="?cat=infrastructure"  class="footer-link">Infrastructure</a>
+          <a href="?cat=reseau-securite" class="footer-link">Réseau & Sécurité</a>
+          <a href="?cat=cybersecurite"   class="footer-link">Cybersécurité</a>
+          <a href="?cat=automatisation"  class="footer-link">Automatisation</a>
+          <a href="?cat=gouvernance"     class="footer-link">Gouvernance IT</a>
+          <a href="?cat=linux"           class="footer-link">Linux</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <div class="footer-links">
+          <a href="index.html"       class="footer-link">Accueil</a>
+          <a href="governance.html"  class="footer-link">Gouvernance</a>
+          <a href="architecture.html"class="footer-link">Architecture</a>
+          <a href="about.html"       class="footer-link">À propos</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Niveaux</div>
+        <div class="footer-links">
+          <a href="?level=Lab"        class="footer-link" style="color:var(--green-ok);">● Lab</a>
+          <a href="?level=Pilote"     class="footer-link" style="color:var(--yellow-note);">● Pilote</a>
+          <a href="?level=Production" class="footer-link" style="color:var(--cyan);">● Production</a>
+          <a href="?level=Expert"     class="footer-link" style="color:var(--orange-warn);">● Expert</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui</div>
+      <div class="footer-stack">Cloudflare Pages · HTML/CSS/JS</div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+(async () => {
+  let allLabs = [];
+  let activeCat = 'all';
+  let activeLevel = null;
+  let searchTerm = '';
+
+  // Read URL params
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cat'))   activeCat   = params.get('cat');
+  if (params.get('level')) activeLevel = params.get('level');
+
+  // Load labs
+  try {
+    const res = await fetch('data/labs.json');
+    const data = await res.json();
+    allLabs = data.labs;
+    document.getElementById('total-count').textContent = allLabs.length;
+  } catch { return; }
+
+  function formatDate(d) {
+    return new Date(d).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  function render() {
+    const grid = document.getElementById('labs-grid');
+    let filtered = allLabs.filter(lab => {
+      const matchCat   = activeCat === 'all' || lab.category === activeCat;
+      const matchLevel = !activeLevel || lab.level === activeLevel;
+      const q = searchTerm.toLowerCase();
+      const matchSearch = !q || lab.title.toLowerCase().includes(q)
+        || lab.excerpt.toLowerCase().includes(q)
+        || lab.tags.some(t => t.toLowerCase().includes(q))
+        || lab.environment.toLowerCase().includes(q);
+      return matchCat && matchLevel && matchSearch;
+    });
+
+    document.getElementById('result-count').textContent = filtered.length;
+
+    if (!filtered.length) {
+      grid.innerHTML = `<div class="empty-state">
+        <div style="font-size:1.5rem;margin-bottom:.75rem;">◎</div>
+        Aucun lab trouvé pour cette combinaison de filtres.
+        <br><br>
+        <button onclick="resetFilters()" style="font-family:var(--font-mono);font-size:.75rem;color:var(--cyan);cursor:pointer;background:none;border:1px solid rgba(0,212,255,.3);padding:.4rem 1rem;border-radius:4px;">
+          Réinitialiser les filtres
+        </button>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map((lab, i) => `
+      <article class="lab-card animate-in" style="transition-delay:${i*0.06}s">
+        <div class="lab-card-meta">
+          <span class="lab-level level-${lab.level.toLowerCase()}">${lab.level}</span>
+          <span class="lab-env">⬡ ${lab.environment}</span>
+        </div>
+        <div class="lab-card-date">${formatDate(lab.date)}</div>
+        <h3 class="lab-card-title">${lab.title}</h3>
+        <p class="lab-card-excerpt">${lab.excerpt}</p>
+        <div class="lab-card-footer">
+          <div class="lab-tags">${lab.tags.slice(0,4).map(t=>`<span class="lab-tag">${t}</span>`).join('')}</div>
+          <span class="lab-duration">⏱ ${lab.duration}</span>
+        </div>
+        <a href="${lab.href}" class="lab-card-link">
+          Accéder au lab
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="2" y1="8" x2="14" y2="8"/><polyline points="9,3 14,8 9,13"/>
+          </svg>
+        </a>
+      </article>`).join('');
+
+    // re-trigger animations
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.animate-in:not(.visible)').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 60);
+      });
+    });
+  }
+
+  // Category filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    if (btn.dataset.filter === activeCat) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.filter;
+      render();
+    });
+  });
+
+  // Level filter buttons
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    if (btn.dataset.level === activeLevel) btn.style.opacity = '1';
+    btn.addEventListener('click', () => {
+      if (activeLevel === btn.dataset.level) {
+        activeLevel = null;
+        document.querySelectorAll('.level-btn').forEach(b => b.style.background = '');
+      } else {
+        activeLevel = btn.dataset.level;
+        document.querySelectorAll('.level-btn').forEach(b => b.style.background = '');
+        btn.style.background = 'rgba(255,255,255,0.08)';
+      }
+      render();
+    });
+  });
+
+  // Search
+  document.getElementById('search-input').addEventListener('input', e => {
+    searchTerm = e.target.value;
+    render();
+  });
+
+  window.resetFilters = () => {
+    activeCat = 'all'; activeLevel = null; searchTerm = '';
+    document.getElementById('search-input').value = '';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('[data-filter="all"]').classList.add('active');
+    document.querySelectorAll('.level-btn').forEach(b => b.style.background = '');
+    render();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

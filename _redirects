@@ -1,0 +1,4 @@
+# Cloudflare Pages Redirects
+/labs    /labs.html    301
+/about   /about.html   301
+/archi   /architecture.html 301

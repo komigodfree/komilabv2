@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KomiLab — Laboratoire digital d'ingénierie IT open source. Architecture, Cybersécurité, Gouvernance, Automatisation.">
+  <meta name="keywords" content="KomiLab, ingénierie IT, cybersécurité, proxmox, réseau, ISO 27001, infrastructure, open source">
+  <meta property="og:title" content="KomiLab — Build. Secure. Govern. Scale.">
+  <meta property="og:description" content="Engineering Lab for Real-World IT Infrastructure">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://komilab.org">
+  <title>KomiLab — Build. Secure. Govern. Scale.</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">KL</div>
+      <span class="logo-text">Komi<span>Lab</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="labs.html"         class="nav-link">Labs</a>
+      <a href="governance.html"   class="nav-link">Gouvernance</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="veille.html"       class="nav-link">Veille</a>
+      <a href="about.html"        class="nav-link">À propos</a>
+    </div>
+    <a href="labs.html" class="nav-cta">Explorer les labs →</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<!-- HERO -->
+<section class="hero grid-bg">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container" style="position:relative;z-index:2;width:100%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+      <div class="hero-content">
+        <div class="hero-badge">Engineering Lab · Open Source · Production-Grade</div>
+        <h1 class="hero-title">
+          <span class="line-dim">Build.</span>
+          <span class="line-accent">Secure.</span>
+          <span class="line-dim">Govern. Scale.</span>
+        </h1>
+        <p class="hero-sub">
+          Laboratoire digital d'ingénierie IT open source. Architecture multi-sites, cybersécurité, gouvernance ISO 27001 et automatisation — documentés depuis des environnements réels de production.
+        </p>
+        <div class="terminal-prompt">
+          <span class="prompt-sym">komi@komilab</span>
+          <span style="color:var(--text-muted)">:</span>
+          <span style="color:var(--blue-accent)">~/labs</span>
+          <span style="color:var(--text-muted)">$</span>
+          <span class="prompt-cmd">./explore --category=all --level=production</span>
+          <span class="cursor"></span>
+        </div>
+        <div class="hero-actions">
+          <a href="labs.html" class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
+            Explorer les Labs
+          </a>
+          <a href="architecture.html" class="btn btn-outline">Voir l'Architecture →</a>
+          <a href="https://github.com/komilab" target="_blank" rel="noopener" class="btn btn-ghost">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card"><div class="stat-value" data-counter="6">0</div><div class="stat-label">Labs publiés</div></div>
+        <div class="stat-card"><div class="stat-value" data-counter="10">0</div><div class="stat-label">Années d'expérience</div></div>
+        <div class="stat-card"><div class="stat-value" data-counter="4">0</div><div class="stat-label">Certifications actives</div></div>
+        <div class="stat-card"><div class="stat-value">∞</div><div class="stat-label">Open Source</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOMAINS -->
+<section class="section-sm" style="background:var(--bg-deep);border-top:1px solid var(--bg-border);border-bottom:1px solid var(--bg-border);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">// Domaines</div>
+        <h2 class="section-title">Périmètres d'ingénierie</h2>
+      </div>
+      <a href="labs.html" class="btn btn-ghost" style="font-size:0.75rem;">Tous les labs →</a>
+    </div>
+    <div class="domains-grid" id="domains-grid">
+      <div style="grid-column:1/-1;padding:2rem;text-align:center;font-family:var(--font-mono);font-size:.75rem;color:var(--text-muted);">Chargement…</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED LABS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">// Labs à la une</div>
+        <h2 class="section-title">Derniers Labs publiés</h2>
+      </div>
+      <a href="labs.html" class="btn btn-ghost" style="font-size:0.75rem;">Voir tout →</a>
+    </div>
+    <div class="labs-grid" id="featured-labs">
+      <div style="grid-column:1/-1;padding:3rem;text-align:center;">
+        <div class="news-loading-bar" style="max-width:240px;margin:0 auto;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH & CYBER INTELLIGENCE -->
+<section class="section-sm" style="background:var(--bg-deep);border-top:1px solid var(--bg-border);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">// Flux temps réel</div>
+        <h2 class="section-title">Tech &amp; Cyber Intelligence</h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);">
+        <span style="width:6px;height:6px;background:var(--green-ok);border-radius:50%;display:inline-block;animation:pulse 2s infinite;box-shadow:0 0 6px var(--green-ok);"></span>
+        Live · Sources vérifiées
+      </div>
+    </div>
+    <div class="news-grid">
+      <div class="news-col animate-in">
+        <div class="news-col-header">
+          <span class="news-col-icon">🌐</span>
+          <span class="news-col-title"><span>TECH</span> WORLD</span>
+        </div>
+        <div class="news-items" id="news-tech">
+          <div class="news-loading">Chargement du flux…<div class="news-loading-bar"></div></div>
+        </div>
+      </div>
+      <div class="news-col animate-in" style="transition-delay:.1s">
+        <div class="news-col-header">
+          <span class="news-col-icon">🔐</span>
+          <span class="news-col-title"><span>CYBER</span>SECURITY</span>
+        </div>
+        <div class="news-items" id="news-cyber">
+          <div class="news-loading">Chargement du flux…<div class="news-loading-bar"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE TEASER -->
+<section class="section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+      <div class="animate-in">
+        <div class="section-eyebrow">// KOMI.LAB Reference Architecture</div>
+        <h2 style="font-size:1.75rem;margin-bottom:1rem;">Un HomeLab conçu comme une infrastructure d'entreprise</h2>
+        <p style="color:var(--text-secondary);font-size:.88rem;line-height:1.8;margin-bottom:1.5rem;">
+          Proxmox Cluster · PA-VM Firewall · VXLAN inter-nœuds · Zones USERS / SERVERS / SOC / MGT / DMZ. Chaque décision d'architecture est documentée, justifiée et reproductible.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem;">
+          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Environnement multi-zones segmenté</div>
+          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Haute disponibilité et failover documentés</div>
+          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Stack monitoring : Prometheus + Grafana + Loki</div>
+          <div style="display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--text-secondary);"><span style="color:var(--green-ok);">✓</span> Active Directory durci — HardenAD + Tiering</div>
+        </div>
+        <a href="architecture.html" class="btn btn-outline">Voir l'architecture complète →</a>
+      </div>
+      <div class="animate-in" style="transition-delay:.15s">
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">KOMI.LAB — Network Topology</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code>┌─────────────────────────────────────────┐
+│            INTERNET / WAN               │
+└──────────────────┬──────────────────────┘
+                   │
+         ┌─────────▼─────────┐
+         │   PA-VM FIREWALL  │  ◄── Zone Control
+         │   (Palo Alto VM)  │
+         └──┬────┬────┬──┬───┘
+            │    │    │  │
+         ┌──▼┐ ┌─▼┐ ┌─▼┐ ┌─▼────┐
+         │USR│ │SRV│ │SOC│ │ DMZ  │
+         │/24│ │/24│ │/24│ │WireG.│
+         └───┘ └───┘ └───┘ └──────┘
+            │
+   ┌────────▼────────────────────┐
+   │   PROXMOX CLUSTER (3 nodes) │
+   │  ┌──────┐┌──────┐┌───────┐ │
+   │  │NODE 1││NODE 2││NODE 3 │ │
+   │  │ PVE  ││ PVE  ││ PVE   │ │
+   │  └──┬───┘└──┬───┘└───┬───┘ │
+   │     └────────┴─────────┘    │
+   │         VXLAN Overlay        │
+   └────────────┬────────────────┘
+                │
+        ┌───────▼───────┐
+        │ TrueNAS SCALE │ ◄── iSCSI / NFS
+        │  (Shared Stor)│
+        └───────────────┘</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section style="background:linear-gradient(135deg,rgba(0,212,255,0.06) 0%,rgba(37,99,235,0.08) 100%);border-top:1px solid var(--bg-border);border-bottom:1px solid var(--bg-border);padding:4rem 0;">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+    <div>
+      <div class="section-eyebrow" style="margin-bottom:.5rem;">// Rejoindre KomiLab</div>
+      <h2 style="font-size:1.6rem;margin-bottom:.5rem;">Construisons ensemble.</h2>
+      <p style="color:var(--text-secondary);font-size:.88rem;max-width:480px;">Newsletter mensuelle · Labs exclusifs · Blueprints téléchargeables · Communauté d'ingénieurs</p>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+      <a href="about.html#newsletter" class="btn btn-primary">S'abonner à la newsletter</a>
+      <a href="https://github.com/komilab" target="_blank" rel="noopener" class="btn btn-outline">GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Komi<span>Lab</span></div>
+        <p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source. Architecture, cybersécurité, gouvernance et automatisation depuis des environnements réels.</p>
+        <div class="footer-socials">
+          <a href="https://github.com/komilab" target="_blank" rel="noopener" class="footer-social" title="GitHub">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/komi-kpodohoui" target="_blank" rel="noopener" class="footer-social" title="LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="mailto:contact@komilab.org" class="footer-social" title="Email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Labs</div>
+        <div class="footer-links">
+          <a href="labs.html?cat=infrastructure"  class="footer-link">Infrastructure & Virtualisation</a>
+          <a href="labs.html?cat=reseau-securite" class="footer-link">Réseau & Sécurité</a>
+          <a href="labs.html?cat=cybersecurite"   class="footer-link">Cybersécurité</a>
+          <a href="labs.html?cat=automatisation"  class="footer-link">Automatisation</a>
+          <a href="labs.html?cat=gouvernance"     class="footer-link">Gouvernance IT</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Ressources</div>
+        <div class="footer-links">
+          <a href="architecture.html"             class="footer-link">Blueprints Architecture</a>
+          <a href="governance.html"               class="footer-link">GRC & ISO 27001</a>
+          <a href="veille.html"                   class="footer-link">Veille technologique</a>
+          <a href="https://github.com/komilab"    class="footer-link" target="_blank" rel="noopener">GitHub Configs</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">À propos</div>
+        <div class="footer-links">
+          <a href="about.html"                    class="footer-link">Komi Kpodohoui</a>
+          <a href="about.html#certifications"     class="footer-link">Certifications</a>
+          <a href="about.html#newsletter"         class="footer-link">Newsletter</a>
+          <a href="about.html#contact"            class="footer-link">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui · CCNP · ISO 27001 Lead Implementer</div>
+      <div class="footer-stack">Hébergé sur Cloudflare Pages · Open Source · HTML/CSS/JS</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- LAB_META_DESCRIPTION : Remplacer par la description du lab (160 car max) -->
+  <meta name="description" content="LAB_META_DESCRIPTION">
+  <!-- LAB_META_KEYWORDS : Remplacer par les mots-clés séparés par des virgules -->
+  <meta name="keywords" content="LAB_META_KEYWORDS, KomiLab">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="KomiLab">
+  <!-- LAB_TITLE : Titre complet du lab -->
+  <meta property="og:title" content="LAB_TITLE — KomiLab">
+  <meta property="og:description" content="LAB_META_DESCRIPTION">
+  <!-- LAB_TITLE : Répéter ici -->
+  <title>LAB_TITLE — KomiLab</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* ── LAB ARTICLE STYLES ────────────────────────────────── */
+    .lab-hero {
+      padding: 6.5rem 0 3rem;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--bg-border);
+      position: relative; overflow: hidden;
+    }
+    .lab-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .lab-hero-inner { position: relative; z-index: 1; }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      display: flex; align-items: center; gap: .4rem;
+      font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--text-muted); transition: color var(--transition); }
+    .breadcrumb a:hover { color: var(--cyan); }
+    .breadcrumb-sep { color: var(--bg-border); }
+
+    /* LAB HEADER META */
+    .lab-meta-bar {
+      display: flex; align-items: center; gap: .75rem;
+      flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .lab-title-main {
+      font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      line-height: 1.15; margin-bottom: 1rem;
+      font-family: var(--font-mono);
+    }
+    .lab-info-grid {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+    }
+    .lab-info-item {
+      display: flex; flex-direction: column; gap: .15rem;
+    }
+    .lab-info-label {
+      font-family: var(--font-mono); font-size: .6rem;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: .1em;
+    }
+    .lab-info-value {
+      font-family: var(--font-mono); font-size: .8rem;
+      color: var(--text-primary); font-weight: 500;
+    }
+    .lab-tags-bar { display: flex; gap: .4rem; flex-wrap: wrap; }
+
+    /* LAYOUT */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* TABLE OF CONTENTS */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      position: sticky;
+      top: 80px;
+    }
+    .toc-title {
+      font-family: var(--font-mono); font-size: .7rem;
+      font-weight: 600; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--cyan);
+      margin-bottom: .85rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid var(--bg-border);
+    }
+    .toc-list { display: flex; flex-direction: column; gap: .15rem; }
+    .toc-link {
+      font-family: var(--font-mono); font-size: .72rem;
+      color: var(--text-muted); padding: .3rem .5rem;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+      display: flex; align-items: center; gap: .4rem;
+      border-left: 2px solid transparent;
+    }
+    .toc-link:hover, .toc-link.active {
+      color: var(--cyan); background: var(--cyan-ghost);
+      border-left-color: var(--cyan);
+    }
+    .toc-link.toc-l2 { padding-left: 1.25rem; font-size: .68rem; }
+
+    /* LAB META SIDEBAR */
+    .lab-sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar-card-title {
+      font-family: var(--font-mono); font-size: .7rem;
+      font-weight: 600; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--text-secondary);
+      margin-bottom: .75rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--bg-border);
+    }
+    .sidebar-list { display: flex; flex-direction: column; gap: .35rem; }
+    .sidebar-item {
+      display: flex; align-items: flex-start; gap: .5rem;
+      font-family: var(--font-mono); font-size: .72rem;
+      color: var(--text-secondary); line-height: 1.4;
+    }
+    .sidebar-item::before { content: '→'; color: var(--cyan); flex-shrink: 0; }
+
+    /* ARTICLE CONTENT */
+    .lab-content { min-width: 0; }
+    .lab-content h2 {
+      font-size: 1.35rem;
+      color: var(--text-primary);
+      margin: 2.5rem 0 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--bg-border);
+      scroll-margin-top: 80px;
+    }
+    .lab-content h2:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+    .lab-content h3 {
+      font-size: 1rem;
+      color: var(--cyan);
+      margin: 1.75rem 0 .75rem;
+      scroll-margin-top: 80px;
+    }
+    .lab-content p {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+    .lab-content ul, .lab-content ol {
+      margin: .75rem 0 1rem 1.25rem;
+      display: flex; flex-direction: column; gap: .4rem;
+    }
+    .lab-content li {
+      font-size: .86rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .lab-content ul li::marker { color: var(--cyan); }
+    .lab-content strong { color: var(--text-primary); font-weight: 600; }
+    .lab-content a { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* CALLOUT BOXES */
+    .callout {
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      border-left: 3px solid;
+      font-size: .84rem;
+      line-height: 1.7;
+    }
+    .callout-title {
+      font-family: var(--font-mono); font-size: .7rem;
+      font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; margin-bottom: .4rem;
+    }
+    .callout-info    { background: rgba(0,212,255,0.06);  border-color: var(--cyan);       color: var(--text-secondary); }
+    .callout-info    .callout-title { color: var(--cyan); }
+    .callout-warning { background: rgba(255,209,102,0.06);border-color: var(--yellow-note); color: var(--text-secondary); }
+    .callout-warning .callout-title { color: var(--yellow-note); }
+    .callout-danger  { background: rgba(255,76,76,0.06);  border-color: var(--red-alert);   color: var(--text-secondary); }
+    .callout-danger  .callout-title { color: var(--red-alert); }
+    .callout-success { background: rgba(0,255,148,0.06);  border-color: var(--green-ok);    color: var(--text-secondary); }
+    .callout-success .callout-title { color: var(--green-ok); }
+
+    /* STEP COUNTER */
+    .steps { counter-reset: step; display: flex; flex-direction: column; gap: 0; margin: 1.25rem 0; }
+    .step {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--bg-border);
+      counter-increment: step;
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--cyan-ghost); border: 1px solid rgba(0,212,255,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-size: .72rem; font-weight: 700;
+      color: var(--cyan); flex-shrink: 0; margin-top: .1rem;
+    }
+    .step-num::after { content: counter(step); }
+    .step-body { flex: 1; }
+    .step-title {
+      font-family: var(--font-mono); font-size: .88rem;
+      font-weight: 600; color: var(--text-primary); margin-bottom: .4rem;
+    }
+    .step-desc { font-size: .83rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* RESULT / METRICS */
+    .result-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: .75rem;
+      margin: 1.25rem 0;
+    }
+    .result-card {
+      background: var(--bg-card); border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md); padding: 1rem; text-align: center;
+    }
+    .result-value {
+      font-family: var(--font-mono); font-size: 1.6rem; font-weight: 700;
+      color: var(--cyan); line-height: 1;
+    }
+    .result-label { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); margin-top: .3rem; }
+
+    /* LAB NAV (prev/next) */
+    .lab-nav {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      margin-top: 3rem; padding-top: 2rem;
+      border-top: 1px solid var(--bg-border);
+    }
+    .lab-nav-card {
+      background: var(--bg-card); border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md); padding: 1rem 1.25rem;
+      transition: all var(--transition);
+    }
+    .lab-nav-card:hover { border-color: rgba(0,212,255,.25); }
+    .lab-nav-label { font-family: var(--font-mono); font-size: .65rem; color: var(--text-muted); margin-bottom: .3rem; }
+    .lab-nav-title { font-family: var(--font-mono); font-size: .82rem; font-weight: 600; color: var(--cyan); }
+
+    @media(max-width:900px) {
+      .lab-layout { grid-template-columns: 1fr; }
+      .toc, .lab-sidebar-card { position: static; }
+      .result-grid { grid-template-columns: 1fr 1fr; }
+      .lab-nav { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="nav-logo">
+      <div class="logo-mark">KL</div>
+      <span class="logo-text">Komi<span>Lab</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="../labs.html"         class="nav-link active">Labs</a>
+      <a href="../governance.html"   class="nav-link">Gouvernance</a>
+      <a href="../architecture.html" class="nav-link">Architecture</a>
+      <a href="../veille.html"       class="nav-link">Veille</a>
+      <a href="../about.html"        class="nav-link">À propos</a>
+    </div>
+    <a href="../labs.html" class="nav-cta">Tous les labs →</a>
+    <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="../labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="../governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="../architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="../veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="../about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<!-- LAB HERO -->
+<section class="lab-hero">
+  <div class="container lab-hero-inner">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+      <a href="../index.html">KomiLab</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="../labs.html">Labs</a>
+      <span class="breadcrumb-sep">/</span>
+      <!-- LAB_CATEGORY_LABEL : ex "Infrastructure & Virtualisation" -->
+      <span>LAB_CATEGORY_LABEL</span>
+    </div>
+
+    <!-- META BAR -->
+    <div class="lab-meta-bar">
+      <!-- LAB_LEVEL : lab / pilote / production / expert -->
+      <span class="lab-level level-LAB_LEVEL">LAB_LEVEL_LABEL</span>
+      <!-- LAB_CATEGORY_ID : infrastructure / reseau-securite / cybersecurite / automatisation / gouvernance / linux -->
+      <span class="badge badge-cyan">LAB_CATEGORY_LABEL</span>
+      <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);">
+        ⬡ LAB_ENVIRONMENT <!-- ex: KOMI.LAB ou Production SGMT -->
+      </span>
+      <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);">
+        📅 LAB_DATE <!-- ex: 15 janvier 2025 -->
+      </span>
+    </div>
+
+    <!-- TITLE -->
+    <!-- LAB_TITLE : Titre complet du lab -->
+    <h1 class="lab-title-main">LAB_TITLE</h1>
+
+    <!-- INFO GRID -->
+    <div class="lab-info-grid">
+      <div class="lab-info-item">
+        <span class="lab-info-label">Durée estimée</span>
+        <span class="lab-info-value">⏱ LAB_DURATION</span> <!-- ex: 3h -->
+      </div>
+      <div class="lab-info-item">
+        <span class="lab-info-label">Niveau</span>
+        <span class="lab-info-value">LAB_LEVEL_LABEL</span>
+      </div>
+      <div class="lab-info-item">
+        <span class="lab-info-label">Environnement</span>
+        <span class="lab-info-value">LAB_ENVIRONMENT</span>
+      </div>
+      <div class="lab-info-item">
+        <span class="lab-info-label">Auteur</span>
+        <span class="lab-info-value">Komi Kpodohoui</span>
+      </div>
+      <div class="lab-info-item">
+        <span class="lab-info-label">Mis à jour</span>
+        <span class="lab-info-value">LAB_DATE</span>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="lab-tags-bar">
+      <!-- Répéter pour chaque tag -->
+      <span class="lab-tag">TAG_1</span>
+      <span class="lab-tag">TAG_2</span>
+      <span class="lab-tag">TAG_3</span>
+      <!-- Ajouter ou supprimer des tags selon besoin -->
+    </div>
+
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="section">
+  <div class="container">
+    <div class="lab-layout">
+
+      <!-- ARTICLE CONTENT -->
+      <main class="lab-content">
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 1 : CONTEXTE & PROBLÉMATIQUE
+             ═══════════════════════════════════════════ -->
+        <h2 id="contexte">Contexte & Problématique</h2>
+        <p>
+          <!-- Décrire le contexte réel : pourquoi ce lab a été nécessaire, quel problème il résout. -->
+          LAB_CONTEXT_PARAGRAPH
+        </p>
+        <p>
+          <!-- Ajouter des détails supplémentaires si nécessaire. -->
+          LAB_CONTEXT_PARAGRAPH_2
+        </p>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 2 : ARCHITECTURE CIBLE
+             ═══════════════════════════════════════════ -->
+        <h2 id="architecture">Architecture cible</h2>
+        <p>LAB_ARCHITECTURE_DESCRIPTION</p>
+
+        <!-- Schéma ASCII — OBLIGATOIRE pour chaque lab -->
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">Topology / Architecture Diagram</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code>
+┌──────────────────────────────────────┐
+│         LAB_ARCHITECTURE_SCHEMA      │
+│  Remplacer par le schéma ASCII réel  │
+│                                      │
+│  [Composant A] ──── [Composant B]   │
+│       │                              │
+│  [Composant C]                       │
+└──────────────────────────────────────┘
+          </code></pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 3 : PRÉREQUIS
+             ═══════════════════════════════════════════ -->
+        <h2 id="prerequis">Prérequis</h2>
+
+        <h3>Environnement</h3>
+        <ul>
+          <li>LAB_PREREQ_ENV_1 <!-- ex: Proxmox VE 8.x installé sur 2+ nœuds --></li>
+          <li>LAB_PREREQ_ENV_2</li>
+          <li>LAB_PREREQ_ENV_3</li>
+        </ul>
+
+        <h3>Connaissances requises</h3>
+        <ul>
+          <li>LAB_PREREQ_KNOWLEDGE_1 <!-- ex: Notions de clustering et haute disponibilité --></li>
+          <li>LAB_PREREQ_KNOWLEDGE_2</li>
+        </ul>
+
+        <div class="callout callout-info">
+          <div class="callout-title">ℹ Information</div>
+          <!-- LAB_CALLOUT_INFO : Information importante à signaler avant de commencer -->
+          LAB_CALLOUT_INFO
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 4 : PROCÉDURE (ÉTAPES)
+             ═══════════════════════════════════════════ -->
+        <h2 id="procedure">Procédure</h2>
+
+        <!-- ÉTAPE 1 -->
+        <h3 id="etape-1">Étape 1 — LAB_STEP1_TITLE</h3>
+        <p>LAB_STEP1_DESCRIPTION</p>
+
+        <!-- Bloc de code avec copy-button — TOUJOURS inclure le bouton copy -->
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code class="language-bash">
+# LAB_STEP1_COMMENT
+LAB_STEP1_COMMAND_1
+LAB_STEP1_COMMAND_2
+
+# Vérification
+LAB_STEP1_VERIFY_COMMAND
+          </code></pre>
+        </div>
+
+        <!-- ÉTAPE 2 -->
+        <h3 id="etape-2">Étape 2 — LAB_STEP2_TITLE</h3>
+        <p>LAB_STEP2_DESCRIPTION</p>
+
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code class="language-bash">
+# LAB_STEP2_COMMENT
+LAB_STEP2_COMMAND_1
+LAB_STEP2_COMMAND_2
+          </code></pre>
+        </div>
+
+        <!-- Ajouter autant d'étapes que nécessaire en dupliquant le bloc h3 + code -->
+
+        <!-- ÉTAPE N — Configuration fichier -->
+        <h3 id="etape-config">Configuration — LAB_CONFIG_TITLE</h3>
+        <p>LAB_CONFIG_DESCRIPTION</p>
+
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <!-- Changer le lang selon le type : bash / yaml / json / conf / python / powershell -->
+            <span class="code-block-lang">yaml</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code class="language-yaml">
+# LAB_CONFIG_FILENAME
+LAB_CONFIG_CONTENT
+          </code></pre>
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 5 : POINTS CRITIQUES & ERREURS
+             ═══════════════════════════════════════════ -->
+        <h2 id="erreurs">Points critiques & Erreurs rencontrées</h2>
+
+        <div class="callout callout-warning">
+          <div class="callout-title">⚠ Attention</div>
+          LAB_WARNING_1 <!-- ex: Ne pas activer HA avant que le cluster Corosync soit stable -->
+        </div>
+
+        <h3>Erreur 1 — LAB_ERROR1_TITLE</h3>
+        <p><strong>Symptôme :</strong> LAB_ERROR1_SYMPTOM</p>
+        <p><strong>Cause :</strong> LAB_ERROR1_CAUSE</p>
+        <p><strong>Résolution :</strong> LAB_ERROR1_FIX</p>
+
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">bash</span>
+            <button class="copy-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre><code class="language-bash">
+# Fix : LAB_ERROR1_TITLE
+LAB_ERROR1_FIX_COMMAND
+          </code></pre>
+        </div>
+
+        <!-- Ajouter d'autres erreurs si nécessaire -->
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 6 : RÉSULTATS & MÉTRIQUES
+             ═══════════════════════════════════════════ -->
+        <h2 id="resultats">Résultats & Métriques</h2>
+        <p>LAB_RESULTS_DESCRIPTION</p>
+
+        <!-- Métriques visuelles — Adapter les valeurs -->
+        <div class="result-grid">
+          <div class="result-card">
+            <div class="result-value">LAB_METRIC1_VALUE</div>
+            <div class="result-label">LAB_METRIC1_LABEL</div>
+          </div>
+          <div class="result-card">
+            <div class="result-value">LAB_METRIC2_VALUE</div>
+            <div class="result-label">LAB_METRIC2_LABEL</div>
+          </div>
+          <div class="result-card">
+            <div class="result-value">LAB_METRIC3_VALUE</div>
+            <div class="result-label">LAB_METRIC3_LABEL</div>
+          </div>
+        </div>
+
+        <div class="callout callout-success">
+          <div class="callout-title">✓ Résultat</div>
+          LAB_SUCCESS_NOTE
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 7 : RECOMMANDATIONS PRODUCTION
+             ═══════════════════════════════════════════ -->
+        <h2 id="production">Recommandations production</h2>
+        <p>Points critiques à vérifier avant un passage en production réelle :</p>
+        <ul>
+          <li>LAB_PROD_REC_1</li>
+          <li>LAB_PROD_REC_2</li>
+          <li>LAB_PROD_REC_3</li>
+          <li>LAB_PROD_REC_4</li>
+        </ul>
+
+        <div class="callout callout-danger">
+          <div class="callout-title">🔴 Critique production</div>
+          LAB_PROD_CRITICAL <!-- Ex: Ne jamais exposer le port de management sur l'interface WAN -->
+        </div>
+
+        <!-- ═══════════════════════════════════════════
+             SECTION 8 : RÉFÉRENCES
+             ═══════════════════════════════════════════ -->
+        <h2 id="references">Références</h2>
+        <ul>
+          <li><a href="LAB_REF1_URL" target="_blank" rel="noopener">LAB_REF1_TITLE</a></li>
+          <li><a href="LAB_REF2_URL" target="_blank" rel="noopener">LAB_REF2_TITLE</a></li>
+          <li><a href="LAB_REF3_URL" target="_blank" rel="noopener">LAB_REF3_TITLE</a></li>
+        </ul>
+
+        <!-- LAB NAVIGATION (prev / next) -->
+        <div class="lab-nav">
+          <a href="LAB_PREV_URL" class="lab-nav-card">
+            <div class="lab-nav-label">← Lab précédent</div>
+            <div class="lab-nav-title">LAB_PREV_TITLE</div>
+          </a>
+          <a href="LAB_NEXT_URL" class="lab-nav-card" style="text-align:right;">
+            <div class="lab-nav-label">Lab suivant →</div>
+            <div class="lab-nav-title">LAB_NEXT_TITLE</div>
+          </a>
+        </div>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+          <div class="toc-title">// Sommaire</div>
+          <nav class="toc-list">
+            <a href="#contexte"   class="toc-link">Contexte & Problématique</a>
+            <a href="#architecture" class="toc-link">Architecture cible</a>
+            <a href="#prerequis"  class="toc-link">Prérequis</a>
+            <a href="#procedure"  class="toc-link">Procédure</a>
+            <a href="#etape-1"    class="toc-link toc-l2">↳ Étape 1</a>
+            <a href="#etape-2"    class="toc-link toc-l2">↳ Étape 2</a>
+            <a href="#etape-config" class="toc-link toc-l2">↳ Configuration</a>
+            <a href="#erreurs"    class="toc-link">Points critiques</a>
+            <a href="#resultats"  class="toc-link">Résultats</a>
+            <a href="#production" class="toc-link">Recommandations</a>
+            <a href="#references" class="toc-link">Références</a>
+          </nav>
+        </div>
+
+        <!-- LAB INFO -->
+        <div class="lab-sidebar-card">
+          <div class="sidebar-card-title">// Infos Lab</div>
+          <div class="sidebar-list">
+            <div class="sidebar-item">LAB_LEVEL_LABEL</div>
+            <div class="sidebar-item">⏱ LAB_DURATION</div>
+            <div class="sidebar-item">⬡ LAB_ENVIRONMENT</div>
+            <div class="sidebar-item">📅 LAB_DATE</div>
+          </div>
+        </div>
+
+        <!-- RELATED LABS -->
+        <div class="lab-sidebar-card">
+          <div class="sidebar-card-title">// Labs associés</div>
+          <div class="sidebar-list">
+            <!-- Modifier les liens vers les labs pertinents -->
+            <div class="sidebar-item"><a href="LAB_RELATED1_URL" style="color:var(--cyan);text-decoration:none;">LAB_RELATED1_TITLE</a></div>
+            <div class="sidebar-item"><a href="LAB_RELATED2_URL" style="color:var(--cyan);text-decoration:none;">LAB_RELATED2_TITLE</a></div>
+          </div>
+        </div>
+
+        <!-- GITHUB LINK -->
+        <div class="lab-sidebar-card">
+          <div class="sidebar-card-title">// Configs GitHub</div>
+          <a href="https://github.com/komilab" target="_blank" rel="noopener" class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem;margin-top:.25rem;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+            Voir les configs
+          </a>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Komi<span>Lab</span></div>
+        <p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <div class="footer-links">
+          <a href="../index.html"        class="footer-link">Accueil</a>
+          <a href="../labs.html"         class="footer-link">Labs</a>
+          <a href="../governance.html"   class="footer-link">Gouvernance</a>
+          <a href="../architecture.html" class="footer-link">Architecture</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Lab actuel</div>
+        <div class="footer-links">
+          <a href="#contexte"    class="footer-link">Contexte</a>
+          <a href="#procedure"   class="footer-link">Procédure</a>
+          <a href="#resultats"   class="footer-link">Résultats</a>
+          <a href="#references"  class="footer-link">Références</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="footer-links">
+          <a href="../about.html#newsletter" class="footer-link">Newsletter</a>
+          <a href="../about.html#contact"    class="footer-link">Contact</a>
+          <a href="https://github.com/komilab" target="_blank" class="footer-link">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui</div>
+      <div class="footer-stack">Cloudflare Pages · HTML/CSS/JS</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-powershell.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+/* Active TOC link on scroll */
+const headings = document.querySelectorAll('.lab-content h2[id], .lab-content h3[id]');
+const tocLinks  = document.querySelectorAll('.toc-link');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+headings.forEach(h => observer.observe(h));
+</script>
+</body>
+</html>

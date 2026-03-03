@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Déploiement d'un cluster Proxmox 3 nœuds haute disponibilité avec stockage partagé TrueNAS SCALE via iSCSI et NFS.">
+  <meta property="og:title" content="Cluster Proxmox + TrueNAS SCALE — KomiLab">
+  <title>Cluster Proxmox + TrueNAS SCALE — KomiLab</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    .article-layout{display:grid;grid-template-columns:1fr 280px;gap:3rem;align-items:start;}
+    .article-hero{padding:6rem 0 3rem;background:var(--bg-deep);border-bottom:1px solid var(--bg-border);position:relative;overflow:hidden;}
+    .article-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;}
+    .article-hero-inner{position:relative;z-index:1;}
+    .article-breadcrumb{display:flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);margin-bottom:1.5rem;}
+    .article-breadcrumb a{color:var(--text-muted);transition:color var(--transition);}
+    .article-breadcrumb a:hover{color:var(--cyan);}
+    .article-meta-bar{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+    .article-title{font-size:clamp(1.6rem,3.5vw,2.4rem);line-height:1.15;margin-bottom:1rem;}
+    .article-excerpt{font-size:.92rem;color:var(--text-secondary);max-width:720px;line-height:1.8;margin-bottom:1.5rem;}
+    .article-info-bar{display:flex;gap:1.5rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);padding-top:1.25rem;border-top:1px solid var(--bg-border);}
+    .article-info-item{display:flex;align-items:center;gap:.4rem;}
+    .article-info-item .lbl{color:var(--text-muted);}
+    .article-info-item .val{color:var(--text-secondary);}
+    .article-content{padding:3rem 0;}
+    .article-section{margin-bottom:3rem;}
+    .article-section h2{font-size:1.3rem;color:var(--text-primary);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--bg-border);display:flex;align-items:center;gap:.6rem;}
+    .article-section h2::before{content:attr(data-num);font-size:.65rem;color:var(--cyan);background:var(--cyan-ghost);border:1px solid rgba(0,212,255,.2);padding:.2rem .5rem;border-radius:100px;font-weight:400;letter-spacing:.1em;}
+    .article-section h3{font-size:1rem;font-weight:600;color:var(--text-primary);margin:1.5rem 0 .75rem;}
+    .article-section p{font-size:.88rem;color:var(--text-secondary);line-height:1.8;margin-bottom:1rem;}
+    .article-section ul,.article-section ol{padding-left:1.25rem;margin-bottom:1rem;}
+    .article-section li{font-size:.88rem;color:var(--text-secondary);line-height:1.7;margin-bottom:.35rem;}
+    .article-section ul li::marker{color:var(--cyan);}
+    .callout{border-radius:var(--radius-md);padding:1rem 1.25rem;margin:1.25rem 0;font-size:.85rem;line-height:1.7;display:flex;gap:.75rem;border:1px solid transparent;}
+    .callout-icon{font-size:1rem;flex-shrink:0;margin-top:.05rem;}
+    .callout-body{color:var(--text-secondary);}
+    .callout-body strong{display:block;margin-bottom:.3rem;font-family:var(--font-mono);font-size:.78rem;}
+    .callout-info{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.2);}
+    .callout-warn{background:rgba(255,209,102,.06);border-color:rgba(255,209,102,.2);}
+    .callout-success{background:rgba(0,255,148,.06);border-color:rgba(0,255,148,.2);}
+    .callout-danger{background:rgba(255,76,76,.06);border-color:rgba(255,76,76,.2);}
+    .article-table-wrap{overflow-x:auto;margin:1.5rem 0;border:1px solid var(--bg-border);border-radius:var(--radius-md);}
+    .article-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+    .article-table th{font-family:var(--font-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:.75rem 1rem;background:rgba(0,0,0,.2);border-bottom:1px solid var(--bg-border);text-align:left;}
+    .article-table td{padding:.75rem 1rem;color:var(--text-secondary);border-bottom:1px solid rgba(26,35,64,.4);}
+    .article-table tr:last-child td{border-bottom:none;}
+    .article-table tr:hover td{background:var(--cyan-ghost);}
+    .sidebar{position:sticky;top:80px;}
+    .sidebar-card{background:var(--bg-card);border:1px solid var(--bg-border);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1rem;}
+    .sidebar-title{font-family:var(--font-mono);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:.85rem;}
+    .toc-list{display:flex;flex-direction:column;gap:.35rem;}
+    .toc-link{font-family:var(--font-mono);font-size:.75rem;color:var(--text-muted);padding:.3rem .5rem;border-radius:var(--radius-sm);transition:all var(--transition);display:flex;align-items:center;gap:.5rem;border-left:2px solid transparent;}
+    .toc-link:hover,.toc-link.active{color:var(--cyan);background:var(--cyan-ghost);border-left-color:var(--cyan);}
+    .toc-link::before{content:attr(data-num);font-size:.6rem;color:var(--text-muted);}
+    .meta-item{display:flex;align-items:center;gap:.6rem;font-family:var(--font-mono);font-size:.72rem;color:var(--text-secondary);margin-bottom:.6rem;}
+    .meta-item .meta-key{color:var(--text-muted);min-width:80px;}
+    .meta-item .meta-val{color:var(--text-primary);}
+    .progress-bar{height:3px;background:var(--bg-border);border-radius:2px;margin-top:1rem;overflow:hidden;}
+    .progress-fill{height:100%;background:var(--cyan);width:0%;transition:width .2s ease;border-radius:2px;}
+    .step{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start;}
+    .step-num{width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--cyan-ghost);border:1px solid rgba(0,212,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:var(--cyan);margin-top:.1rem;}
+    .step-body{flex:1;}
+    .step-title{font-family:var(--font-mono);font-size:.88rem;font-weight:600;color:var(--text-primary);margin-bottom:.4rem;}
+    .step-desc{font-size:.85rem;color:var(--text-secondary);line-height:1.7;}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0;}
+    .result-card{background:var(--bg-card);border:1px solid var(--bg-border);border-radius:var(--radius-md);padding:1rem;text-align:center;}
+    .result-val{font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--cyan);line-height:1;}
+    .result-lbl{font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.08em;}
+    @media(max-width:1024px){.article-layout{grid-template-columns:1fr;}.sidebar{position:static;}}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="nav-logo"><div class="logo-mark">KL</div><span class="logo-text">Komi<span>Lab</span></span></a>
+    <div class="nav-links">
+      <a href="../labs.html"         class="nav-link active">Labs</a>
+      <a href="../governance.html"   class="nav-link">Gouvernance</a>
+      <a href="../architecture.html" class="nav-link">Architecture</a>
+      <a href="../veille.html"       class="nav-link">Veille</a>
+      <a href="../about.html"        class="nav-link">À propos</a>
+    </div>
+    <a href="../labs.html" class="nav-cta">← Tous les labs</a>
+    <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="../labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="../governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="../architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="../veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="../about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<section class="article-hero">
+  <div class="container article-hero-inner">
+    <div class="article-breadcrumb">
+      <a href="../index.html">KomiLab</a><span>/</span>
+      <a href="../labs.html">Labs</a><span>/</span>
+      <a href="../labs.html?cat=infrastructure">Infrastructure</a><span>/</span>
+      <span style="color:var(--text-secondary)">Proxmox + TrueNAS</span>
+    </div>
+    <div class="article-meta-bar">
+      <span class="lab-level level-production">Production</span>
+      <span class="badge badge-cyan">Infrastructure</span>
+      <span style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);">⬡ KOMI.LAB</span>
+    </div>
+    <h1 class="article-title">Cluster Proxmox VE + TrueNAS SCALE<br>via iSCSI &amp; NFS</h1>
+    <p class="article-excerpt">Déploiement d'un cluster Proxmox 3 nœuds en haute disponibilité avec stockage partagé TrueNAS SCALE. Configuration du réseau VXLAN inter-nœuds, exposition des datastores iSCSI pour les VMs, NFS pour les sauvegardes PBS, et validation complète du failover.</p>
+    <div class="article-info-bar">
+      <div class="article-info-item"><span class="lbl">Durée :</span><span class="val">⏱ 3h</span></div>
+      <div class="article-info-item"><span class="lbl">Publié :</span><span class="val">15 janvier 2025</span></div>
+      <div class="article-info-item"><span class="lbl">Auteur :</span><span class="val">Komi Kpodohoui</span></div>
+      <div class="article-info-item"><span class="lbl">Tags :</span><span class="val">Proxmox, TrueNAS, iSCSI, NFS, HA, Corosync</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="container article-content">
+  <div class="article-layout">
+    <main>
+
+      <!-- S1 -->
+      <section class="article-section" id="s1">
+        <h2 data-num="01">Contexte &amp; Problématique</h2>
+        <p>Dans mon KOMI.LAB, j'exploite 3 nœuds Proxmox VE pour la virtualisation. Le problème initial : chaque nœud avait son propre stockage local, rendant impossible la migration live des VMs entre nœuds et la haute disponibilité réelle.</p>
+        <p>L'objectif est de déployer un stockage partagé via TrueNAS SCALE, exposé en iSCSI pour les datastores VMs et en NFS pour les sauvegardes Proxmox Backup Server (PBS). Cela permettra le Live Migration et le failover automatique via Corosync/Pacemaker.</p>
+        <div class="callout callout-info">
+          <span class="callout-icon">ℹ️</span>
+          <div class="callout-body">
+            <strong>Environnement KOMI.LAB</strong>
+            3× Proxmox VE 8.1.4 · TrueNAS SCALE 23.10 · Réseau storage dédié 10.0.99.0/24 · Interconnexion 1Gbps (LAG futur 10G)
+          </div>
+        </div>
+        <p>Ce lab a ensuite été adapté pour la production SGMT avec des ajustements réseau (VLAN storage isolé, jumbo frames 9000 MTU) et une redondance des chemins iSCSI via MPIO.</p>
+      </section>
+
+      <!-- S2 -->
+      <section class="article-section" id="s2">
+        <h2 data-num="02">Architecture cible</h2>
+        <p>Chaque nœud Proxmox se connecte au TrueNAS via deux protocoles distincts : iSCSI pour les disques VM (performances bloc) et NFS pour les sauvegardes PBS (simplicité fichier).</p>
+        <div class="code-block-wrapper">
+          <div class="code-block-header">
+            <span class="code-block-lang">Topologie — Cluster Proxmox + TrueNAS</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code>  ┌─────────┐    ┌─────────┐    ┌─────────┐
+  │  pve01  │    │  pve02  │    │  pve03  │
+  │10.0.99.1│    │10.0.99.2│    │10.0.99.3│
+  └────┬────┘    └────┬────┘    └────┬────┘
+       │              │              │
+       └──────────────┴──────────────┘
+                  Storage VLAN
+                  10.0.99.0/24
+                       │
+              ┌────────▼────────┐
+              │  TrueNAS SCALE  │
+              │  10.0.99.10     │
+              │                 │
+              │  iSCSI :3260    │ ← Datastores VMs
+              │  NFS   :2049    │ ← Sauvegardes PBS
+              │  SMB   :445     │ ← Partages optionnels
+              │                 │
+              │  Pool: ZFS Mirror│
+              │  4TB usable     │
+              └─────────────────┘
+
+  Cluster Corosync (ring0: MGMT, ring1: STORAGE)
+  HA Manager → failover automatique VMs critiques</code></pre>
+        </div>
+      </section>
+
+      <!-- S3 -->
+      <section class="article-section" id="s3">
+        <h2 data-num="03">Prérequis</h2>
+        <div class="article-table-wrap">
+          <table class="article-table">
+            <thead><tr><th>Composant</th><th>Version testée</th><th>Rôle</th></tr></thead>
+            <tbody>
+              <tr><td>Proxmox VE</td><td style="font-family:var(--font-code);color:var(--cyan);">8.1.4</td><td>Hyperviseur cluster (×3 nœuds)</td></tr>
+              <tr><td>TrueNAS SCALE</td><td style="font-family:var(--font-code);color:var(--cyan);">23.10.2</td><td>NAS partagé iSCSI + NFS</td></tr>
+              <tr><td>Corosync</td><td style="font-family:var(--font-code);color:var(--cyan);">3.1.7</td><td>Clustering et quorum</td></tr>
+              <tr><td>open-iscsi</td><td style="font-family:var(--font-code);color:var(--cyan);">2.1.8</td><td>Initiateur iSCSI Linux</td></tr>
+              <tr><td>Réseau storage</td><td style="font-family:var(--font-code);color:var(--cyan);">1GbE dédié</td><td>Isolation trafic storage</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout callout-warn">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-body">
+            <strong>Sauvegarde préalable obligatoire</strong>
+            Avant toute manipulation cluster, exporter les VMs critiques ou s'assurer d'un snapshot récent. Le quorum cluster peut rendre des VMs indisponibles si mal configuré.
+          </div>
+        </div>
+      </section>
+
+      <!-- S4 -->
+      <section class="article-section" id="s4">
+        <h2 data-num="04">Étapes de déploiement</h2>
+
+        <div class="step"><div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Configurer le pool ZFS sur TrueNAS SCALE</div>
+            <div class="step-desc">Créer un pool ZFS Mirror avec les disques disponibles. Activer la compression LZ4 et les snapshots automatiques.</div>
+          </div>
+        </div>
+        <div class="code-block-wrapper">
+          <div class="code-block-header"><span class="code-block-lang">TrueNAS CLI / Shell</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code class="language-bash"># Vérifier les disques disponibles
+lsblk -d -o NAME,SIZE,MODEL
+
+# Créer le pool ZFS Mirror (via interface TrueNAS ou CLI)
+zpool create -o ashift=12 \
+  -O compression=lz4 \
+  -O atime=off \
+  -O xattr=sa \
+  tank mirror /dev/sdb /dev/sdc
+
+# Vérifier l'état du pool
+zpool status tank
+zpool list tank</code></pre>
+        </div>
+
+        <div class="step"><div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Créer et exposer le target iSCSI sur TrueNAS</div>
+            <div class="step-desc">Depuis l'interface web TrueNAS → Shares → iSCSI. Créer un Portal, un Initiator Group, un Extent (zvol), puis le Target.</div>
+          </div>
+        </div>
+        <div class="code-block-wrapper">
+          <div class="code-block-header"><span class="code-block-lang">bash — TrueNAS Shell</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code class="language-bash"># Créer le zvol pour les VMs Proxmox (via CLI ou WebUI)
+zfs create -V 2T -o volblocksize=16K tank/proxmox-vms
+
+# Vérifier le zvol
+zfs list -t volume tank/proxmox-vms
+
+# Tester que le service iSCSI écoute
+ss -tlnp | grep 3260</code></pre>
+        </div>
+
+        <div class="step"><div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Installer et configurer open-iscsi sur chaque nœud Proxmox</div>
+            <div class="step-desc">Sur les 3 nœuds Proxmox, installer l'initiateur iSCSI, découvrir le target TrueNAS et se connecter.</div>
+          </div>
+        </div>
+        <div class="code-block-wrapper">
+          <div class="code-block-header"><span class="code-block-lang">bash — Sur chaque nœud Proxmox (pve01, pve02, pve03)</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code class="language-bash"># Installer open-iscsi
+apt update && apt install -y open-iscsi
+
+# Activer le service
+systemctl enable --now iscsid
+
+# Découverte du target TrueNAS
+iscsiadm -m discovery -t sendtargets -p 10.0.99.10:3260
+
+# Connexion au target (remplacer IQN par celui de TrueNAS)
+iscsiadm -m node \
+  --targetname iqn.2005-10.org.freenas.ctl:proxmox-vms \
+  --portal 10.0.99.10:3260 \
+  --login
+
+# Vérifier la connexion
+iscsiadm -m session
+lsblk | grep sd</code></pre>
+        </div>
+
+        <div class="step"><div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Ajouter le stockage iSCSI dans Proxmox</div>
+            <div class="step-desc">Depuis l'interface Proxmox → Datacenter → Storage → Add → iSCSI. Puis ajouter un LVM sur le LUN iSCSI.</div>
+          </div>
+        </div>
+        <div class="code-block-wrapper">
+          <div class="code-block-header"><span class="code-block-lang">bash — Proxmox Shell (pve01)</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code class="language-bash"># Identifier le device iSCSI connecté
+ls -la /dev/disk/by-path/ | grep iscsi
+
+# Créer le VG LVM sur le LUN iSCSI
+pvcreate /dev/sdb
+vgcreate pve-iscsi /dev/sdb
+
+# Ajouter via pvesm (Proxmox Storage Manager)
+pvesm add lvm komilab-shared \
+  --vgname pve-iscsi \
+  --shared 1 \
+  --content images
+
+# Ajouter le NFS TrueNAS pour les backups PBS
+pvesm add nfs komilab-backups \
+  --server 10.0.99.10 \
+  --export /mnt/tank/proxmox-backups \
+  --content backup \
+  --options vers=4
+
+# Vérifier les storages
+pvesm status</code></pre>
+        </div>
+
+        <div class="step"><div class="step-num">5</div>
+          <div class="step-body">
+            <div class="step-title">Configurer la Haute Disponibilité (HA)</div>
+            <div class="step-desc">Ajouter les VMs critiques au groupe HA. Configurer les politiques de failover automatique via le HA Manager.</div>
+          </div>
+        </div>
+        <div class="code-block-wrapper">
+          <div class="code-block-header"><span class="code-block-lang">bash — Proxmox Shell</span>
+            <button class="copy-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="9" height="11" rx="1"/><path d="M4 4V3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-1"/></svg> Copy</button>
+          </div>
+          <pre><code class="language-bash"># Créer un groupe HA
+ha-manager groupadd production \
+  --nodes pve01,pve02,pve03 \
+  --nofailback 0 \
+  --restricted 0
+
+# Ajouter une VM au groupe HA (ex: VMID 100 = AD Controller)
+ha-manager add vm:100 \
+  --group production \
+  --state started \
+  --max_restart 3 \
+  --max_relocate 1
+
+# Vérifier le statut HA
+ha-manager status
+pvecm status</code></pre>
+        </div>
+      </section>
+
+      <!-- S5 -->
+      <section class="article-section" id="s5">
+        <h2 data-num="05">Points critiques &amp; Erreurs rencontrées</h2>
+        <div class="callout callout-danger">
+          <span class="callout-icon">🔴</span>
+          <div class="callout-body">
+            <strong>Erreur #1 — iSCSI non persistant après reboot</strong>
+            <strong>Symptôme :</strong> Après reboot d'un nœud, le LUN iSCSI n'était pas reconnecté automatiquement.<br>
+            <strong>Cause :</strong> Le service iscsid démarrait avant que l'interface réseau storage soit active.<br>
+            <strong>Résolution :</strong> Ajouter <code style="font-family:var(--font-code);color:var(--cyan);">network-online.target</code> dans la dépendance systemd de iscsid, et activer la connexion persistante : <code style="font-family:var(--font-code);color:var(--cyan);">iscsiadm -m node --op update -n node.startup -v automatic</code>
+          </div>
+        </div>
+        <div class="callout callout-warn">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-body">
+            <strong>MTU — Jumbo Frames obligatoire en production</strong>
+            En KOMI.LAB, la MTU 1500 suffit. En production, configurer MTU 9000 sur l'interface storage pour les performances iSCSI. Vérifier que le switch supporte les jumbo frames end-to-end.
+          </div>
+        </div>
+        <div class="callout callout-warn">
+          <span class="callout-icon">⚠️</span>
+          <div class="callout-body">
+            <strong>Quorum — 3 nœuds minimum impératif</strong>
+            Avec 2 nœuds, la perte d'un nœud bloque le cluster (pas de quorum). Toujours maintenir un nombre impair de nœuds ou ajouter un QDevice externe.
+          </div>
+        </div>
+      </section>
+
+      <!-- S6 -->
+      <section class="article-section" id="s6">
+        <h2 data-num="06">Résultats &amp; Métriques</h2>
+        <div class="result-grid">
+          <div class="result-card"><div class="result-val">&lt;30s</div><div class="result-lbl">Failover HA</div></div>
+          <div class="result-card"><div class="result-val">900MB/s</div><div class="result-lbl">Débit iSCSI lu</div></div>
+          <div class="result-card"><div class="result-val">99.9%</div><div class="result-lbl">Dispo cluster</div></div>
+        </div>
+        <div class="callout callout-success">
+          <span class="callout-icon">✅</span>
+          <div class="callout-body">
+            <strong>Validation complète</strong>
+            Test de failover : extinction forcée de pve01 → VMs HA redémarrées sur pve02 en 28 secondes. Live Migration testée sans interruption de service. Sauvegardes PBS fonctionnelles vers NFS TrueNAS.
+          </div>
+        </div>
+      </section>
+
+      <!-- S7 -->
+      <section class="article-section" id="s7">
+        <h2 data-num="07">Recommandations production</h2>
+        <ul>
+          <li>Activer les snapshots ZFS automatiques sur TrueNAS (toutes les heures, rétention 7 jours) avant toute maintenance cluster</li>
+          <li>Dédier une interface réseau physique exclusivement au trafic storage (pas de partage avec le réseau VM)</li>
+          <li>Configurer MPIO (MultiPath I/O) avec 2 chemins iSCSI redondants pour éliminer le SPOF réseau storage</li>
+          <li>Monitorer les métriques ZFS (ARC hit ratio, I/O latency) via Prometheus + node_exporter sur TrueNAS</li>
+          <li>Planifier les mises à jour Proxmox en mode maintenance HA (drainer le nœud avant mise à jour)</li>
+        </ul>
+        <div class="callout callout-info">
+          <span class="callout-icon">🏭</span>
+          <div class="callout-body">
+            <strong>KOMI.LAB vs Production SGMT</strong>
+            En production SGMT, j'ai ajouté : VLAN storage isolé (VLAN 99), MTU 9000 sur tous les équipements, MPIO avec 2 liens physiques dédiés, et une supervision des sessions iSCSI via Zabbix avec alerte si déconnexion.
+          </div>
+        </div>
+      </section>
+
+      <!-- S8 -->
+      <section class="article-section" id="s8">
+        <h2 data-num="08">Références</h2>
+        <ul>
+          <li><a href="https://pve.proxmox.com/wiki/Storage" target="_blank" rel="noopener" style="color:var(--cyan);">Proxmox VE — Storage Documentation</a> — Documentation officielle des types de storage</li>
+          <li><a href="https://www.truenas.com/docs/scale/scaletutorials/shares/iscsi/" target="_blank" rel="noopener" style="color:var(--cyan);">TrueNAS SCALE — iSCSI Configuration</a> — Guide officiel iSCSI TrueNAS</li>
+          <li><a href="https://pve.proxmox.com/wiki/High_Availability" target="_blank" rel="noopener" style="color:var(--cyan);">Proxmox HA Manager</a> — Configuration Haute Disponibilité</li>
+          <li><a href="https://openzfs.github.io/openzfs-docs/" target="_blank" rel="noopener" style="color:var(--cyan);">OpenZFS Documentation</a> — Référence ZFS complète</li>
+        </ul>
+      </section>
+
+      <div style="display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid var(--bg-border);gap:1rem;flex-wrap:wrap;">
+        <a href="../labs.html" class="btn btn-ghost">← Retour aux labs</a>
+        <a href="palo-alto-vxlan-dmz.html" class="btn btn-outline">Lab suivant → PA-VM VXLAN DMZ</a>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Table des matières</div>
+        <div class="toc-list">
+          <a href="#s1" class="toc-link" data-num="01">Contexte &amp; Problématique</a>
+          <a href="#s2" class="toc-link" data-num="02">Architecture cible</a>
+          <a href="#s3" class="toc-link" data-num="03">Prérequis</a>
+          <a href="#s4" class="toc-link" data-num="04">Déploiement</a>
+          <a href="#s5" class="toc-link" data-num="05">Points critiques</a>
+          <a href="#s6" class="toc-link" data-num="06">Résultats</a>
+          <a href="#s7" class="toc-link" data-num="07">Recommandations</a>
+          <a href="#s8" class="toc-link" data-num="08">Références</a>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="read-progress"></div></div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">Fiche Lab</div>
+        <div class="meta-item"><span class="meta-key">Niveau</span><span class="meta-val"><span class="lab-level level-production" style="padding:.1rem .5rem;">Production</span></span></div>
+        <div class="meta-item"><span class="meta-key">Durée</span><span class="meta-val">⏱ 3h</span></div>
+        <div class="meta-item"><span class="meta-key">Env.</span><span class="meta-val">KOMI.LAB</span></div>
+        <div class="meta-item"><span class="meta-key">Publié</span><span class="meta-val">15 jan. 2025</span></div>
+        <div class="meta-item"><span class="meta-key">Auteur</span><span class="meta-val">Komi K.</span></div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">Technologies</div>
+        <div class="lab-tags" style="gap:.4rem;">
+          <span class="lab-tag">Proxmox VE</span><span class="lab-tag">TrueNAS SCALE</span>
+          <span class="lab-tag">iSCSI</span><span class="lab-tag">NFS</span>
+          <span class="lab-tag">ZFS</span><span class="lab-tag">Corosync</span>
+          <span class="lab-tag">HA Manager</span><span class="lab-tag">LVM</span>
+        </div>
+      </div>
+      <div class="sidebar-card">
+        <div class="sidebar-title">Ressources</div>
+        <a href="https://github.com/komilab" target="_blank" rel="noopener" class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem;margin-bottom:.5rem;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          Configs sur GitHub
+        </a>
+        <a href="../labs.html" class="btn btn-ghost" style="width:100%;justify-content:center;font-size:.72rem;">← Tous les labs</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div><div class="footer-brand-name">Komi<span>Lab</span></div><p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source.</p></div>
+      <div><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="../index.html" class="footer-link">Accueil</a><a href="../labs.html" class="footer-link">Labs</a><a href="../architecture.html" class="footer-link">Architecture</a><a href="../about.html" class="footer-link">À propos</a></div></div>
+      <div><div class="footer-col-title">Contact</div><div class="footer-links"><a href="../about.html#newsletter" class="footer-link">Newsletter</a><a href="https://github.com/komilab" target="_blank" class="footer-link">GitHub</a></div></div>
+    </div>
+    <div class="footer-bottom"><div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui</div><div class="footer-stack">Cloudflare Pages · HTML/CSS/JS</div></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+const progressFill = document.getElementById('read-progress');
+if(progressFill){window.addEventListener('scroll',()=>{const d=document.documentElement;progressFill.style.width=Math.min(100,(d.scrollTop||document.body.scrollTop)/(d.scrollHeight-d.clientHeight)*100)+'%';},{passive:true});}
+const sections=document.querySelectorAll('.article-section[id]');
+const tocLinks=document.querySelectorAll('.toc-link');
+if(sections.length&&tocLinks.length){const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){tocLinks.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.toc-link[href="#${e.target.id}"]`);if(a)a.classList.add('active');}});},{rootMargin:'-20% 0px -70% 0px'});sections.forEach(s=>obs.observe(s));}
+</script>
+</body>
+</html>

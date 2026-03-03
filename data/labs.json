@@ -1,0 +1,91 @@
+{
+  "labs": [
+    {
+      "id": "proxmox-cluster-truenas",
+      "title": "Cluster Proxmox + TrueNAS SCALE via NFS/iSCSI",
+      "excerpt": "Déploiement d'un cluster Proxmox haute disponibilité avec stockage partagé TrueNAS SCALE. Configuration VXLAN inter-nœuds, gestion des datastores et tests de failover.",
+      "category": "infrastructure",
+      "tags": ["Proxmox", "TrueNAS", "Clustering", "iSCSI", "HA"],
+      "level": "Production",
+      "duration": "3h",
+      "environment": "KOMI.LAB",
+      "date": "2025-01-15",
+      "href": "labs/proxmox-cluster-truenas.html",
+      "featured": true
+    },
+    {
+      "id": "palo-alto-vxlan-dmz",
+      "title": "Segmentation VXLAN avec PA-VM Firewall en DMZ",
+      "excerpt": "Architecture de segmentation réseau avancée utilisant VXLAN entre nœuds Proxmox et inspection de trafic via Palo Alto VM-Series en zone DMZ.",
+      "category": "reseau-securite",
+      "tags": ["Palo Alto", "VXLAN", "DMZ", "Segmentation", "Proxmox"],
+      "level": "Expert",
+      "duration": "4h",
+      "environment": "KOMI.LAB",
+      "date": "2025-01-28",
+      "href": "labs/palo-alto-vxlan-dmz.html",
+      "featured": true
+    },
+    {
+      "id": "wireguard-vpn-production",
+      "title": "WireGuard VPN — Déploiement en Production Multi-sites",
+      "excerpt": "Mise en œuvre d'un VPN WireGuard pour interconnexion de sites distants. Tunnel chiffré, routage inter-VLAN, monitoring et supervision du tunnel.",
+      "category": "reseau-securite",
+      "tags": ["WireGuard", "VPN", "Multi-sites", "Routage"],
+      "level": "Pilote",
+      "duration": "2h",
+      "environment": "Production SGMT",
+      "date": "2025-02-05",
+      "href": "labs/wireguard-vpn-production.html",
+      "featured": false
+    },
+    {
+      "id": "hardening-active-directory",
+      "title": "HardenAD — Durcissement Active Directory selon CIS",
+      "excerpt": "Application du framework HardenAD sur un domaine Active Directory. Audit pre/post, GPO de sécurité, tiering model et supervision des événements critiques.",
+      "category": "cybersecurite",
+      "tags": ["Active Directory", "HardenAD", "CIS", "GPO", "Tiering"],
+      "level": "Production",
+      "duration": "3h30",
+      "environment": "KOMI.LAB",
+      "date": "2025-02-18",
+      "href": "labs/hardening-active-directory.html",
+      "featured": true
+    },
+    {
+      "id": "glpi-itsm-production",
+      "title": "GLPI — Déploiement ITSM complet en environnement d'entreprise",
+      "excerpt": "Installation et configuration de GLPI comme plateforme ITSM. Gestion des assets, tickets, SLA, tableaux de bord KPI et intégration LDAP.",
+      "category": "gouvernance",
+      "tags": ["GLPI", "ITSM", "ITIL", "KPI", "LDAP"],
+      "level": "Production",
+      "duration": "4h",
+      "environment": "Production SGMT",
+      "date": "2025-03-01",
+      "href": "labs/glpi-itsm-production.html",
+      "featured": false
+    },
+    {
+      "id": "docker-monitoring-stack",
+      "title": "Stack Monitoring Docker — Prometheus, Grafana, Loki",
+      "excerpt": "Déploiement d'une stack de monitoring complète avec Prometheus, Grafana et Loki via Docker Compose. Alerting, dashboards infrastructure et logs centralisés.",
+      "category": "automatisation",
+      "tags": ["Docker", "Prometheus", "Grafana", "Loki", "Monitoring"],
+      "level": "Pilote",
+      "duration": "2h30",
+      "environment": "KOMI.LAB",
+      "date": "2025-03-10",
+      "href": "labs/docker-monitoring-stack.html",
+      "featured": false
+    }
+  ],
+  "categories": [
+    { "id": "infrastructure", "label": "Infrastructure & Virtualisation", "icon": "⬡" },
+    { "id": "reseau-securite", "label": "Réseau & Sécurité", "icon": "◈" },
+    { "id": "cybersecurite", "label": "Cybersécurité", "icon": "◉" },
+    { "id": "automatisation", "label": "Automatisation", "icon": "◎" },
+    { "id": "gouvernance", "label": "Gouvernance IT", "icon": "◇" },
+    { "id": "linux", "label": "Systèmes Linux", "icon": "○" }
+  ],
+  "levels": ["Lab", "Pilote", "Production", "Expert"]
+}

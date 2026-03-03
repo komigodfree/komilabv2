@@ -1,0 +1,53 @@
+{
+  "site": {
+    "name": "KomiLab",
+    "tagline": "Build. Secure. Govern. Scale.",
+    "subtitle": "Engineering Lab for Real-World IT Infrastructure",
+    "description": "Laboratoire digital d'ingénierie IT open source — Architecture, Cybersécurité, Gouvernance, Automatisation.",
+    "url": "https://komilab.org",
+    "author": "Komi Kpodohoui",
+    "role": "CISO · CCNP · ISO 27001 Lead Implementer",
+    "email": "contact@komilab.org",
+    "github": "https://github.com/komilab",
+    "linkedin": "https://linkedin.com/in/komi-kpodohoui"
+  },
+  "nav": [
+    { "label": "Labs", "href": "labs.html" },
+    { "label": "Gouvernance", "href": "governance.html" },
+    { "label": "Architecture", "href": "architecture.html" },
+    { "label": "Veille", "href": "veille.html" },
+    { "label": "À propos", "href": "about.html" }
+  ],
+  "rss_sources": [
+    {
+      "name": "The Hacker News",
+      "url": "https://feeds.feedburner.com/TheHackersNews",
+      "category": "cyber"
+    },
+    {
+      "name": "Bleeping Computer",
+      "url": "https://www.bleepingcomputer.com/feed/",
+      "category": "cyber"
+    },
+    {
+      "name": "LeMagIT",
+      "url": "https://www.lemagit.fr/rss/AllArticles.rss",
+      "category": "tech"
+    },
+    {
+      "name": "Linux Foundation",
+      "url": "https://www.linuxfoundation.org/feed/",
+      "category": "tech"
+    },
+    {
+      "name": "CISA Alerts",
+      "url": "https://www.cisa.gov/news.xml",
+      "category": "cyber"
+    },
+    {
+      "name": "Korben",
+      "url": "https://korben.info/feed",
+      "category": "tech"
+    }
+  ]
+}

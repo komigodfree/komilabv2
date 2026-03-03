@@ -1,0 +1,60 @@
+# ============================================================
+# KomiLab — CI/CD GitHub Actions → Cloudflare Pages
+# ============================================================
+# Déploiement automatique à chaque push sur main
+# Prérequis :
+#   1. Dans GitHub → Settings → Secrets → Actions, ajouter :
+#      - CLOUDFLARE_API_TOKEN  (token Cloudflare avec permission Pages)
+#      - CLOUDFLARE_ACCOUNT_ID (ID de ton compte Cloudflare)
+#   2. Remplacer PROJECT_NAME par le nom de ton projet Cloudflare Pages
+# ============================================================
+
+name: Deploy KomiLab → Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      # ── 1. Checkout du code ──────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Validation HTML (optionnel mais recommandé) ──
+      - name: Validate HTML files
+        run: |
+          echo "=== Fichiers HTML trouvés ==="
+          find . -name "*.html" | head -20
+          echo "=== Vérification JSON ==="
+          python3 -m json.tool data/labs.json > /dev/null && echo "✓ labs.json valide"
+          python3 -m json.tool data/config.json > /dev/null && echo "✓ config.json valide"
+
+      # ── 3. Déploiement Cloudflare Pages ─────────────────
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: komilab          # ← Changer si nom différent
+          directory: .                  # Racine du site
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+
+      # ── 4. Notification succès ───────────────────────────
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ KomiLab déployé avec succès sur Cloudflare Pages"
+          echo "🌐 URL : https://komilab.org"
+          echo "📅 Date : $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "📦 Commit : ${{ github.sha }}"

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="À propos de Komi Kpodohoui — CISO, CCNP, ISO 27001 Lead Implementer. KomiLab engineering lab.">
+  <title>KomiLab — À propos</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .page-hero { padding:7rem 0 4rem; background:var(--bg-deep); border-bottom:1px solid var(--bg-border); position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background-image: linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px); background-size:40px 40px; }
+    .page-hero-inner { position:relative; z-index:1; }
+
+    /* PROFILE */
+    .profile-block {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 3rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+    .profile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      position: sticky;
+      top: 80px;
+    }
+    .profile-avatar {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan-ghost), rgba(37,99,235,0.2));
+      border: 2px solid rgba(0,212,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin: 0 auto 1rem;
+    }
+    .profile-name {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: .25rem;
+    }
+    .profile-role {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--cyan);
+      letter-spacing: .08em;
+      margin-bottom: 1rem;
+    }
+    .profile-meta {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+    .profile-meta-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--text-secondary);
+    }
+    .profile-meta-item svg { color: var(--cyan); flex-shrink: 0; }
+    .profile-socials { display:flex; gap:.5rem; justify-content:center; }
+
+    /* CERTS */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 3rem;
+    }
+    .cert-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      transition: all var(--transition);
+    }
+    .cert-card:hover { border-color: rgba(0,212,255,0.25); }
+    .cert-name {
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: .25rem;
+    }
+    .cert-body {
+      font-size: .75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .cert-year {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--text-muted);
+      margin-top: .4rem;
+    }
+
+    /* TIMELINE */
+    .timeline { position:relative; padding-left:2rem; margin-bottom:3rem; }
+    .timeline::before {
+      content:'';
+      position:absolute;
+      left:.5rem; top:0; bottom:0;
+      width:1px;
+      background: linear-gradient(var(--cyan), transparent);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+    .tl-item::before {
+      content:'';
+      position:absolute;
+      left:-1.65rem; top:.35rem;
+      width:8px; height:8px;
+      border-radius:50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .tl-year {
+      font-family: var(--font-mono);
+      font-size: .68rem;
+      color: var(--cyan);
+      letter-spacing: .1em;
+      margin-bottom: .2rem;
+    }
+    .tl-title {
+      font-family: var(--font-mono);
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: .3rem;
+    }
+    .tl-desc {
+      font-size: .8rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .skill-group { background:var(--bg-card); border:1px solid var(--bg-border); border-radius:var(--radius-md); padding:1.25rem; }
+    .skill-group-title {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--cyan);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+    }
+    .skill-tags { display:flex; flex-wrap:wrap; gap:.35rem; }
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: .68rem;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--bg-border);
+      padding: .2rem .55rem;
+      border-radius: var(--radius-sm);
+    }
+
+    /* NEWSLETTER */
+    .newsletter-block {
+      background: linear-gradient(135deg,rgba(0,212,255,0.06),rgba(37,99,235,0.08));
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 4rem;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: .75rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 240px;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-sm);
+      padding: .65rem 1rem;
+      font-family: var(--font-mono);
+      font-size: .82rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .newsletter-input::placeholder { color:var(--text-muted); }
+    .newsletter-input:focus { border-color:rgba(0,212,255,.4); }
+
+    @media(max-width:900px) {
+      .profile-block { grid-template-columns:1fr; }
+      .profile-card { position:static; }
+      .cert-grid { grid-template-columns:1fr 1fr; }
+      .skills-grid { grid-template-columns:1fr; }
+    }
+    @media(max-width:600px) { .cert-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">KL</div>
+      <span class="logo-text">Komi<span>Lab</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="labs.html"         class="nav-link">Labs</a>
+      <a href="governance.html"   class="nav-link">Gouvernance</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="veille.html"       class="nav-link">Veille</a>
+      <a href="about.html"        class="nav-link active">À propos</a>
+    </div>
+    <a href="labs.html" class="nav-cta">Explorer les labs →</a>
+    <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <div class="section-eyebrow">// Ingénieur · CISO · Architecte</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:.75rem;">
+      À propos de <span style="color:var(--cyan)">KomiLab</span>
+    </h1>
+    <p style="color:var(--text-secondary);font-size:.9rem;max-width:620px;line-height:1.8;">
+      KomiLab est le laboratoire digital de Komi Kpodohoui — CISO, ingénieur réseau et architecte IT, certifié CCNP et ISO 27001 Lead Implementer. Ce site documente 10 ans de pratique terrain en environnements industriels réels.
+    </p>
+  </div>
+</section>
+
+<div class="container" style="padding-top:4rem;">
+
+  <!-- PROFILE -->
+  <div class="profile-block">
+    <div class="profile-card animate-in">
+      <div class="profile-avatar">KK</div>
+      <div class="profile-name">Komi Kpodohoui</div>
+      <div class="profile-role">CISO · Network Architect · ISO 27001 LI</div>
+      <div class="profile-meta">
+        <div class="profile-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Togo, Afrique de l'Ouest
+        </div>
+        <div class="profile-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          CISO — SGMT
+        </div>
+        <div class="profile-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.81 19.79 19.79 0 01.01 2.2 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.5 7.09a16 16 0 006.29 6.29l.77-.77a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92v2z"/></svg>
+          10 ans d'expérience
+        </div>
+        <div class="profile-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Co-fondateur Target Technologies
+        </div>
+      </div>
+      <div class="profile-socials">
+        <a href="https://github.com/komilab" target="_blank" rel="noopener" class="footer-social">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/komi-kpodohoui" target="_blank" rel="noopener" class="footer-social">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="mailto:contact@komilab.org" class="footer-social">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <!-- BIO -->
+      <div class="section-eyebrow" style="margin-bottom:.5rem;">// Mission</div>
+      <h2 style="font-size:1.4rem;margin-bottom:1rem;">Pourquoi KomiLab ?</h2>
+      <p style="color:var(--text-secondary);font-size:.88rem;line-height:1.85;margin-bottom:1rem;">
+        Après 10 ans à concevoir des infrastructures IT dans des environnements industriels multi-sites, j'ai accumulé une expertise que les blogs classiques ne documentent pas : les vraies décisions d'architecture, les vraies erreurs rencontrées, les vraies contraintes de production.
+      </p>
+      <p style="color:var(--text-secondary);font-size:.88rem;line-height:1.85;margin-bottom:2rem;">
+        KomiLab est ma réponse à ce manque. Un espace pour documenter rigoureusement — pas pour vulgariser à l'extrême. Chaque lab est issu d'un contexte réel : SGMT, KOMI.LAB ou projets personnels. La dimension gouvernance est systématiquement intégrée car la technique sans cadre de maîtrise reste fragile.
+      </p>
+
+      <!-- TIMELINE -->
+      <div class="section-eyebrow" style="margin-bottom:.75rem;">// Parcours</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2025 →</div>
+          <div class="tl-title">CISO — SGMT · Co-fondateur Target Technologies</div>
+          <div class="tl-desc">Direction sécurité SI multi-sites, déploiement ISO 27001, développement VÉRA (application mobile).</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022 — 2024</div>
+          <div class="tl-title">Responsable IT & Sécurité — SGMT</div>
+          <div class="tl-desc">Migration infrastructure, déploiement Palo Alto, virtualisation Proxmox, gouvernance ITIL.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2019 — 2022</div>
+          <div class="tl-title">Administrateur Systèmes & Réseaux</div>
+          <div class="tl-desc">Administration VMware vSphere, DataCore SANsymphony, Cisco switching, MikroTik routing.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2015 — 2019</div>
+          <div class="tl-title">Ingénieur Réseau & Télécommunications</div>
+          <div class="tl-desc">Déploiement infrastructure réseau, gestion des UPS Eaton, câblage structuré, support N3.</div>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="section-eyebrow" style="margin-bottom:.75rem;">// Compétences</div>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <div class="skill-group-title">Infrastructure</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Proxmox VE</span><span class="skill-tag">VMware vSphere</span>
+            <span class="skill-tag">TrueNAS SCALE</span><span class="skill-tag">KVM/LXC</span>
+            <span class="skill-tag">Docker</span><span class="skill-tag">DataCore</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Réseau & Sécurité</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Palo Alto</span><span class="skill-tag">Cisco IOS</span>
+            <span class="skill-tag">MikroTik</span><span class="skill-tag">VXLAN</span>
+            <span class="skill-tag">WireGuard</span><span class="skill-tag">BGP/OSPF</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Cybersécurité</div>
+          <div class="skill-tags">
+            <span class="skill-tag">SIEM</span><span class="skill-tag">Active Directory</span>
+            <span class="skill-tag">HardenAD</span><span class="skill-tag">Threat Hunting</span>
+            <span class="skill-tag">Pentest</span><span class="skill-tag">SOC</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Gouvernance</div>
+          <div class="skill-tags">
+            <span class="skill-tag">ISO 27001</span><span class="skill-tag">ITIL v4</span>
+            <span class="skill-tag">PSSI</span><span class="skill-tag">GRC</span>
+            <span class="skill-tag">GLPI</span><span class="skill-tag">EBIOS RM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CERTIFICATIONS -->
+  <div id="certifications">
+    <div class="section-eyebrow" style="margin-bottom:.5rem;">// Certifications</div>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Certifications actives</h2>
+    <div class="cert-grid animate-in">
+      <div class="cert-card">
+        <div class="cert-name">CCNP ENCOR</div>
+        <div class="cert-body">Enterprise Core — Routing, Switching, Wireless, Security Architecture</div>
+        <div class="cert-year">Cisco · Actif</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">CCNA</div>
+        <div class="cert-body">Cisco Certified Network Associate — Fondamentaux réseau</div>
+        <div class="cert-year">Cisco · Actif</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">ISO 27001 LI</div>
+        <div class="cert-body">Lead Implementer — Implémentation SMSI en organisation</div>
+        <div class="cert-year">PECB · Actif</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">CompTIA Security+</div>
+        <div class="cert-body">Cybersécurité fondamentale — Threats, Cryptography, PKI</div>
+        <div class="cert-year">CompTIA · Actif</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">CompTIA CySA+</div>
+        <div class="cert-body">Cybersecurity Analyst — Threat detection, SIEM, incident response</div>
+        <div class="cert-year">CompTIA · Actif</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">AWS Cloud Practitioner</div>
+        <div class="cert-body">Fondamentaux cloud AWS — Services, sécurité, architecture</div>
+        <div class="cert-year">Amazon · Actif</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div id="newsletter" class="newsletter-block animate-in">
+    <div class="section-eyebrow" style="margin-bottom:.5rem;">// KomiLab Digest</div>
+    <h2 style="font-size:1.3rem;margin-bottom:.5rem;">Newsletter mensuelle</h2>
+    <p style="color:var(--text-secondary);font-size:.85rem;max-width:560px;line-height:1.7;">
+      Un lab technique exclusif · Veille cybersécurité synthétisée · Retours d'expérience production · Blueprints téléchargeables. Pas de spam. Désabonnement en un clic.
+    </p>
+    <div class="newsletter-form">
+      <input type="email" class="newsletter-input" placeholder="votre.email@organisation.com">
+      <button class="btn btn-primary" onclick="handleSubscribe(this)">
+        S'abonner au Digest →
+      </button>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);margin-top:.75rem;">
+      ◎ Fréquence mensuelle · Données non partagées · RGPD compliant
+    </p>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contact" style="margin-bottom:4rem;">
+    <div class="section-eyebrow" style="margin-bottom:.5rem;">// Collaboration</div>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Contact</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="mailto:contact@komilab.org" style="text-decoration:none;">
+        <div class="domain-card" style="cursor:pointer;">
+          <span class="domain-icon">✉️</span>
+          <div class="domain-title">Email direct</div>
+          <div class="domain-count">contact@komilab.org</div>
+        </div>
+      </a>
+      <a href="https://linkedin.com/in/komi-kpodohoui" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="domain-card" style="cursor:pointer;">
+          <span class="domain-icon">💼</span>
+          <div class="domain-title">LinkedIn</div>
+          <div class="domain-count">Komi Kpodohoui</div>
+        </div>
+      </a>
+      <a href="https://github.com/komilab" target="_blank" rel="noopener" style="text-decoration:none;">
+        <div class="domain-card" style="cursor:pointer;">
+          <span class="domain-icon">⬡</span>
+          <div class="domain-title">GitHub</div>
+          <div class="domain-count">github.com/komilab</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Komi<span>Lab</span></div>
+        <p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <div class="footer-links">
+          <a href="index.html"        class="footer-link">Accueil</a>
+          <a href="labs.html"         class="footer-link">Labs</a>
+          <a href="governance.html"   class="footer-link">Gouvernance</a>
+          <a href="architecture.html" class="footer-link">Architecture</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">À propos</div>
+        <div class="footer-links">
+          <a href="#certifications" class="footer-link">Certifications</a>
+          <a href="#newsletter"     class="footer-link">Newsletter</a>
+          <a href="#contact"        class="footer-link">Contact</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Projets</div>
+        <div class="footer-links">
+          <a href="https://github.com/komilab" target="_blank" class="footer-link">KOMI.LAB HomeLab</a>
+          <a href="#" class="footer-link">Target Technologies</a>
+          <a href="#" class="footer-link">Projet VÉRA</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui</div>
+      <div class="footer-stack">Cloudflare Pages · HTML/CSS/JS</div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+function handleSubscribe(btn) {
+  const input = btn.previousElementSibling;
+  if (!input.value || !input.value.includes('@')) {
+    input.style.borderColor = 'var(--red-alert)';
+    setTimeout(() => input.style.borderColor = '', 2000);
+    return;
+  }
+  btn.textContent = '✓ Inscrit !';
+  btn.style.background = 'var(--green-ok)';
+  btn.style.color = 'var(--bg-deep)';
+  input.value = '';
+  setTimeout(() => { btn.textContent = 'S\'abonner au Digest →'; btn.style.background = ''; btn.style.color = ''; }, 3000);
+}
+</script>
+</body>
+</html>

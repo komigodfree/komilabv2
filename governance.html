@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KomiLab Gouvernance IT — GRC, ISO 27001, ITIL, PSSI, KPI DSI. Cadres et pratiques de gouvernance documentés depuis des environnements réels.">
+  <title>KomiLab — Gouvernance IT</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .page-hero {
+      padding: 7rem 0 4rem;
+      background: var(--bg-deep);
+      border-bottom: 1px solid var(--bg-border);
+      position: relative; overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .page-hero-inner { position: relative; z-index: 1; }
+
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .framework-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .framework-card::after {
+      content: attr(data-label);
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: 1px solid var(--bg-border);
+      padding: 0.2rem 0.5rem;
+      border-radius: 100px;
+    }
+    .framework-card:hover {
+      border-color: rgba(0,212,255,0.2);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+    .fw-icon {
+      width: 44px; height: 44px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+      background: var(--cyan-ghost);
+      border: 1px solid rgba(0,212,255,0.15);
+    }
+    .fw-title {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .fw-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+    .fw-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .fw-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .fw-item::before {
+      content: '→';
+      color: var(--cyan);
+      font-size: 0.7rem;
+    }
+
+    /* MATURITY MODEL */
+    .maturity-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--bg-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 4rem;
+    }
+    .maturity-level {
+      background: var(--bg-card);
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: background var(--transition);
+    }
+    .maturity-level:hover { background: var(--bg-card-hover); }
+    .maturity-num {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .maturity-level.active .maturity-num { color: var(--cyan); }
+    .maturity-name {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .maturity-level.active .maturity-name { color: var(--text-primary); }
+    .maturity-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .maturity-bar {
+      height: 3px;
+      background: var(--bg-border);
+      border-radius: 2px;
+      margin-top: 1rem;
+    }
+    .maturity-level.active .maturity-bar { background: var(--cyan); }
+
+    /* PSSI TABLE */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 4rem;
+    }
+    .table-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--bg-border);
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    thead th {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0.85rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--bg-border);
+      background: rgba(0,0,0,0.1);
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(26,35,64,0.5);
+      transition: background var(--transition);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--cyan-ghost); }
+    tbody td {
+      padding: 0.85rem 1.5rem;
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .td-title { color: var(--text-primary); font-weight: 500; }
+    .td-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+    }
+    .status-done    { color: var(--green-ok);    background: rgba(0,255,148,0.08);  border: 1px solid rgba(0,255,148,0.2);  }
+    .status-wip     { color: var(--yellow-note); background: rgba(255,209,102,0.08);border: 1px solid rgba(255,209,102,0.2);}
+    .status-planned { color: var(--text-muted);  background: rgba(255,255,255,0.04);border: 1px solid var(--bg-border);     }
+
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .kpi-card:hover { border-color: rgba(0,212,255,0.2); }
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .kpi-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .kpi-trend {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      margin-top: 0.4rem;
+    }
+    .trend-up   { color: var(--green-ok); }
+    .trend-down { color: var(--red-alert); }
+    .trend-flat { color: var(--text-muted); }
+
+    @media(max-width:900px) {
+      .framework-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2,1fr); }
+      .maturity-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width:600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">KL</div>
+      <span class="logo-text">Komi<span>Lab</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="labs.html"         class="nav-link">Labs</a>
+      <a href="governance.html"   class="nav-link active">Gouvernance</a>
+      <a href="architecture.html" class="nav-link">Architecture</a>
+      <a href="veille.html"       class="nav-link">Veille</a>
+      <a href="about.html"        class="nav-link">À propos</a>
+    </div>
+    <a href="labs.html" class="nav-cta">Explorer les labs →</a>
+    <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="labs.html"         class="mobile-nav-link">Labs</a>
+  <a href="governance.html"   class="mobile-nav-link">Gouvernance</a>
+  <a href="architecture.html" class="mobile-nav-link">Architecture</a>
+  <a href="veille.html"       class="mobile-nav-link">Veille</a>
+  <a href="about.html"        class="mobile-nav-link">À propos</a>
+</div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <div class="section-eyebrow">// GRC · ISO 27001 · ITIL · PSSI</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:.75rem;">
+      Gouvernance <span style="color:var(--cyan)">IT</span>
+    </h1>
+    <p style="color:var(--text-secondary);font-size:.9rem;max-width:620px;line-height:1.8;">
+      La technique sans gouvernance est fragile. Cette section documente les cadres, politiques et indicateurs qui transforment une infrastructure en système maîtrisé, auditables et aligné sur les objectifs métier.
+    </p>
+    <div style="display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap;">
+      <span class="badge badge-cyan">ISO 27001</span>
+      <span class="badge badge-cyan">ISO 9001</span>
+      <span class="badge badge-cyan">ITIL v4</span>
+      <span class="badge badge-cyan">PSSI</span>
+      <span class="badge badge-cyan">GRC</span>
+      <span class="badge badge-cyan">KPI DSI</span>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="padding-top:4rem;">
+
+  <!-- FRAMEWORKS -->
+  <div class="section-eyebrow" style="margin-bottom:.5rem;">// Cadres de référence</div>
+  <h2 class="section-title" style="margin-bottom:2rem;">Frameworks documentés</h2>
+
+  <div class="framework-grid">
+
+    <div class="framework-card animate-in" data-label="Certifiant">
+      <div class="fw-icon">🔐</div>
+      <div class="fw-title">ISO/IEC 27001:2022</div>
+      <div class="fw-desc">Système de Management de la Sécurité de l'Information. Approche structurée pour identifier, traiter et monitorer les risques sécurité dans un contexte réel d'entreprise.</div>
+      <div class="fw-items">
+        <div class="fw-item">Analyse de risques (méthode EBIOS RM)</div>
+        <div class="fw-item">Déclaration d'applicabilité (SoA)</div>
+        <div class="fw-item">Plan de traitement des risques</div>
+        <div class="fw-item">Indicateurs SMSI et revues de direction</div>
+        <div class="fw-item">Gestion des non-conformités et actions correctives</div>
+      </div>
+    </div>
+
+    <div class="framework-card animate-in" data-label="Best Practice" style="transition-delay:.08s">
+      <div class="fw-icon">⚙️</div>
+      <div class="fw-title">ITIL v4 — ITSM</div>
+      <div class="fw-desc">Bibliothèque de bonnes pratiques pour la gestion des services IT. Implémenté via GLPI en production avec SLA, gestion des incidents et catalogue de services.</div>
+      <div class="fw-items">
+        <div class="fw-item">Gestion des incidents (P1 à P4)</div>
+        <div class="fw-item">Gestion des problèmes et analyses RCA</div>
+        <div class="fw-item">Gestion des changements (CAB)</div>
+        <div class="fw-item">CMDB et gestion des assets</div>
+        <div class="fw-item">Catalogue de services et SLA</div>
+      </div>
+    </div>
+
+    <div class="framework-card animate-in" data-label="Politique" style="transition-delay:.12s">
+      <div class="fw-icon">📋</div>
+      <div class="fw-title">PSSI — Politique de Sécurité SI</div>
+      <div class="fw-desc">Politique de Sécurité du Système d'Information : document fondateur qui définit les règles, responsabilités et exigences de sécurité applicables à l'ensemble de l'organisation.</div>
+      <div class="fw-items">
+        <div class="fw-item">Charte informatique utilisateurs</div>
+        <div class="fw-item">Politique de gestion des accès et identités</div>
+        <div class="fw-item">Politique de sauvegarde et PRA/PCA</div>
+        <div class="fw-item">Politique de gestion des vulnérabilités</div>
+        <div class="fw-item">Procédure de réponse aux incidents</div>
+      </div>
+    </div>
+
+    <div class="framework-card animate-in" data-label="Risques" style="transition-delay:.16s">
+      <div class="fw-icon">◉</div>
+      <div class="fw-title">GRC — Gouvernance, Risques, Conformité</div>
+      <div class="fw-desc">Approche intégrée de la gestion des risques IT. Alignement entre les objectifs métier, les contraintes réglementaires et la sécurité opérationnelle.</div>
+      <div class="fw-items">
+        <div class="fw-item">Cartographie des risques SI</div>
+        <div class="fw-item">Registre des risques et plan de traitement</div>
+        <div class="fw-item">Conformité réglementaire (RGPD, SOX)</div>
+        <div class="fw-item">Audits internes et externes</div>
+        <div class="fw-item">Indicateurs de risque (KRI)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MATURITY MODEL -->
+  <div class="section-eyebrow" style="margin-bottom:.5rem;">// Évaluation</div>
+  <h2 class="section-title" style="margin-bottom:1.5rem;">Modèle de maturité sécurité</h2>
+  <div class="maturity-grid animate-in">
+    <div class="maturity-level">
+      <div class="maturity-num">1</div>
+      <div class="maturity-name">Initial</div>
+      <div class="maturity-desc">Processus ad hoc, réactif. Pas de documentation formelle.</div>
+      <div class="maturity-bar"></div>
+    </div>
+    <div class="maturity-level">
+      <div class="maturity-num">2</div>
+      <div class="maturity-name">Défini</div>
+      <div class="maturity-desc">Processus documentés, reproductibles mais non mesurés.</div>
+      <div class="maturity-bar"></div>
+    </div>
+    <div class="maturity-level active">
+      <div class="maturity-num">3</div>
+      <div class="maturity-name">Géré</div>
+      <div class="maturity-desc">Processus mesurés, KPI définis, amélioration continue engagée.</div>
+      <div class="maturity-bar"></div>
+    </div>
+    <div class="maturity-level">
+      <div class="maturity-num">4</div>
+      <div class="maturity-name">Optimisé</div>
+      <div class="maturity-desc">Amélioration continue quantitative, automatisation des contrôles.</div>
+      <div class="maturity-bar"></div>
+    </div>
+    <div class="maturity-level">
+      <div class="maturity-num">5</div>
+      <div class="maturity-name">Prédictif</div>
+      <div class="maturity-desc">Anticipation des risques, cyber-résilience organisationnelle.</div>
+      <div class="maturity-bar"></div>
+    </div>
+  </div>
+  <p style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);margin-bottom:4rem;">
+    ◎ Niveau actuel SGMT : <span style="color:var(--cyan);">Niveau 3 — Géré</span> · Objectif 2026 : Niveau 4
+  </p>
+
+  <!-- KPI TABLEAU DE BORD DSI -->
+  <div class="section-eyebrow" style="margin-bottom:.5rem;">// Tableau de bord</div>
+  <h2 class="section-title" style="margin-bottom:1.5rem;">KPI DSI — Indicateurs clés</h2>
+  <div class="kpi-grid animate-in">
+    <div class="kpi-card">
+      <div class="kpi-value">99.6%</div>
+      <div class="kpi-label">Disponibilité SI</div>
+      <div class="kpi-trend trend-up">↑ +0.2% vs N-1</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">&lt;4h</div>
+      <div class="kpi-label">MTTR incidents P1</div>
+      <div class="kpi-trend trend-up">↓ Amélioration</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">87%</div>
+      <div class="kpi-label">Tickets résolus SLA</div>
+      <div class="kpi-trend trend-flat">→ Stable</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value">0</div>
+      <div class="kpi-label">Incidents majeurs</div>
+      <div class="kpi-trend trend-up">↑ Objectif tenu</div>
+    </div>
+  </div>
+
+  <!-- PSSI CHECKLIST TABLE -->
+  <div class="section-eyebrow" style="margin-bottom:.5rem;">// Suivi PSSI</div>
+  <h2 class="section-title" style="margin-bottom:1.5rem;">Avancement des politiques de sécurité</h2>
+  <div class="table-wrapper animate-in">
+    <div class="table-header">
+      <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--text-secondary);">Registre des politiques</span>
+      <span class="badge badge-green">Mis à jour Mars 2025</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Politique</th>
+          <th>Domaine ISO 27001</th>
+          <th>Version</th>
+          <th>Statut</th>
+          <th>Révision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-title">Politique générale de sécurité SI</td>
+          <td>A.5 — Politiques</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v2.1</td>
+          <td><span class="td-status status-done">● Validée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Jan 2026</td>
+        </tr>
+        <tr>
+          <td class="td-title">Gestion des accès et identités (IAM)</td>
+          <td>A.9 — Contrôle d'accès</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v1.3</td>
+          <td><span class="td-status status-done">● Validée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Jan 2026</td>
+        </tr>
+        <tr>
+          <td class="td-title">Politique de sauvegarde et restauration</td>
+          <td>A.12 — Opérations</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v1.1</td>
+          <td><span class="td-status status-done">● Validée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Juil 2025</td>
+        </tr>
+        <tr>
+          <td class="td-title">Plan de Reprise d'Activité (PRA)</td>
+          <td>A.17 — Continuité</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v1.0</td>
+          <td><span class="td-status status-wip">◎ En cours</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Avr 2025</td>
+        </tr>
+        <tr>
+          <td class="td-title">Politique de gestion des vulnérabilités</td>
+          <td>A.12 — Opérations</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v1.0</td>
+          <td><span class="td-status status-wip">◎ En cours</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Avr 2025</td>
+        </tr>
+        <tr>
+          <td class="td-title">Charte informatique utilisateurs</td>
+          <td>A.7 — RH</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v2.0</td>
+          <td><span class="td-status status-done">● Validée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Jan 2026</td>
+        </tr>
+        <tr>
+          <td class="td-title">Procédure de réponse aux incidents</td>
+          <td>A.16 — Incidents</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">v1.2</td>
+          <td><span class="td-status status-done">● Validée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Juil 2025</td>
+        </tr>
+        <tr>
+          <td class="td-title">Politique BYOD et télétravail</td>
+          <td>A.6 — Organisation</td>
+          <td style="font-family:var(--font-mono);font-size:.75rem;">—</td>
+          <td><span class="td-status status-planned">○ Planifiée</span></td>
+          <td style="font-family:var(--font-mono);font-size:.72rem;color:var(--text-muted);">Juin 2025</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CTA Labs Gouvernance -->
+  <div style="background:var(--bg-card);border:1px solid var(--bg-border);border-radius:var(--radius-lg);padding:2.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;margin-bottom:4rem;" class="animate-in">
+    <div>
+      <div class="section-eyebrow" style="margin-bottom:.4rem;">// Labs associés</div>
+      <h3 style="font-size:1.1rem;margin-bottom:.4rem;">Labs Gouvernance disponibles</h3>
+      <p style="font-size:.83rem;color:var(--text-secondary);">GLPI ITSM, déploiement ISO 27001, tableaux de bord KPI et plus encore.</p>
+    </div>
+    <a href="labs.html?cat=gouvernance" class="btn btn-outline">Voir les labs Gouvernance →</a>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Komi<span>Lab</span></div>
+        <p class="footer-brand-desc">Laboratoire digital d'ingénierie IT open source.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Gouvernance</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">ISO 27001</a>
+          <a href="#" class="footer-link">ITIL & ITSM</a>
+          <a href="#" class="footer-link">PSSI</a>
+          <a href="#" class="footer-link">KPI DSI</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <div class="footer-links">
+          <a href="index.html"        class="footer-link">Accueil</a>
+          <a href="labs.html"         class="footer-link">Labs</a>
+          <a href="architecture.html" class="footer-link">Architecture</a>
+          <a href="about.html"        class="footer-link">À propos</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="footer-links">
+          <a href="about.html#contact"     class="footer-link">contact@komilab.org</a>
+          <a href="about.html#newsletter"  class="footer-link">Newsletter</a>
+          <a href="https://github.com/komilab" target="_blank" class="footer-link">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 <span>KomiLab</span> · Komi Kpodohoui · ISO 27001 Lead Implementer</div>
+      <div class="footer-stack">Cloudflare Pages · HTML/CSS/JS</div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
