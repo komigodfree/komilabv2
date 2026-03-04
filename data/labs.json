@@ -34,7 +34,7 @@
       "tags": ["WireGuard", "VPN", "Multi-sites", "Routage"],
       "level": "Pilote",
       "duration": "2h",
-      "environment": "Production SGMT",
+      "environment": "Production KOMI.LAB",
       "date": "2025-02-05",
       "href": "labs/wireguard-vpn-production.html",
       "featured": false
