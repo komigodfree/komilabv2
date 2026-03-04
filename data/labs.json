@@ -60,7 +60,7 @@
       "tags": ["GLPI", "ITSM", "ITIL", "KPI", "LDAP"],
       "level": "Production",
       "duration": "4h",
-      "environment": "Production SGMT",
+      "environment": "Production KOMI.LAB",
       "date": "2025-03-01",
       "href": "labs/glpi-itsm-production.html",
       "featured": false
